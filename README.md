@@ -19,6 +19,19 @@ The last is weird as it should be in host mode for a peripheral.
 
 Open Mediavault installed
 
+## zpool list
+
+NAME    SIZE  ALLOC   FREE  CKPOINT  EXPANDSZ   FRAG    CAP  DEDUP    HEALTH  ALTROOT
+pool0  14.5T  3.45T  11.1T        -         -     1%    23%  1.00x    ONLINE  -
+
+## zfs list
+
+NAME            USED  AVAIL  REFER  MOUNTPOINT
+pool0          2.58T  8.18T  35.9K  /pool0
+pool0/archive  2.17T  8.18T  2.07T  /pool0/archive
+pool0/main     4.77G  5.23G  3.51G  /pool0/main
+pool0/storage   415G   385G   407G  /pool0/storage
+
 ## Router setup
 
 IP | what | notes
