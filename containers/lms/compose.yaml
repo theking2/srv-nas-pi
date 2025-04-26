@@ -3,14 +3,9 @@ services:
     container_name: lms
     image: lmscommunity/lyrionmusicserver
     volumes:
-      - type: bind
-        source: /pool0/archive/media/audio/music
-        target: /music
-        read_only: true
-      - type: bind
-        source: /pool0/archive/media/playlists
-        target: /playlist
-        read_only: true
+      - ./config:/config:rw
+      - /pool0/archive/media/audio/music:/music:ro
+      - /pool0/archive/media/playlists:/playlist:rw
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     network_mode: host
