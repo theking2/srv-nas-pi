@@ -2,7 +2,10 @@
 name: my-strom
 services:
   webserver:
+    container_name: my-strom-webserver
     image: trafex/php-nginx
+    networks:
+      - web
     ports: [ "8888:8080"]
     volumes:
        - ./htdocs:/var/www/html
