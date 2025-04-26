@@ -1,0 +1,22 @@
+# This is a Docker Compose file for running Nginx Proxy Manager.
+services:
+  nginx-proxy:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: nginx-proxy
+    restart: unless-stopped
+    networks:
+      - proxy  # Attach to proxy network
+    environment:
+      - PUID=1000
+      - PGID=1000
+    ports:
+      - '9080:80'
+      - '81:81'
+      - '9443:443'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+
+networks:
+  proxy:
+    external: true

@@ -1,0 +1,13 @@
+# This is a Docker Compose file for running a web server with PHP and Nginx
+name: my-strom
+services:
+  webserver:
+    image: trafex/php-nginx
+    ports: [ "8888:8080"]
+    volumes:
+       - ./htdocs:/var/www/html
+    restart: always
+
+networks:
+  web:
+    driver: bridge
