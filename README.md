@@ -2,14 +2,15 @@
 
 ## Router setup
 
-IP | What
--|-
-192.168.1.1 | LAN
-192.168.1.20 | srv-nas-pi, via Renkforce USB
-188.155.240.245 | WAN, https://office.kingma.ch, https://speed.kingma.ch
+IP | what | notes
+-|-|-
+192.168.1.1 | LAN | sunrise router
+192.168.1.20 | srv-nas-pi | via Renkforce USB
+188.155.240.245 | WAN | https://office.kingma.ch, https://speed.kingma.ch
 
 Nameserver with metanet https://cicero.metanet.cu:8443
-Port | PAT | What
+
+Port | forwared | What
 -|-|-
 80 | 192.168.1.20:9080 | open nextcloud (needed?)
 443 | 192.168.1.20:9443 | nextcloud
