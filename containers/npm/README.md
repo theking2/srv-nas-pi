@@ -8,3 +8,8 @@
 
 - office.kingma.ch, http://nextcloud:80, Let's Encrypt
 - speed.kingma.ch, http://openspeedtest:3000, HTTP only
+
+## config
+
+- data is in `/pool0/main/compose/appdata/npm/data`
+- letsencrypt in `/pool0/main/compose/appdata/npm/letsencrypt`
