@@ -15,7 +15,7 @@ Needed for:
 - penta pcie board
 - Renkforce USB-Ethernet adaptor (???)
 
-The last is weird as it should be in host mode for a perepheral. 
+The last is weird as it should be in host mode for a peripheral. 
 
 Open Mediavault installed
 
