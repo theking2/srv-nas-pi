@@ -1,5 +1,23 @@
 # Nextcloud
 
+## clients
+
+Access from Thunderbird, Davx5 over proxy with `https://office.kingma.ch/remote.php/dav`
+
+## config.php
+
+In `/pool0/main/compose/appdata/nextcloud/config/config.php`
+
+## .htaccess
+
+In `/var/www/html/.htaccess` (access with `docker exec -it nextcloud bash`)
+
+## cron
+
+Cron is set as Webcron (couldn't get the Cron version working). Installed OMV anacron and create a weekly job: `wget --spider https://office.kingma.ch/cron.php`
+
+
+
 ## get version info
 
 Execute as su
