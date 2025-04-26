@@ -1,5 +1,7 @@
 # Settings
 
+OMV Service/compose/settings section:
+
 ## Compose Files
 
 - appdata [on pool0/main, compose/appdata/]
@@ -19,3 +21,12 @@
 ## Overrides
 
 none
+
+
+## Networks
+
+name | purpose
+-|-
+proxy | connects `npm` to the proxied servers
+my-strom_default | (shouldv't named that one myself)
+nextcloud_backend | connects redis, nextcloud, nextclouddb
