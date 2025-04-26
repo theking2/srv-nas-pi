@@ -16,6 +16,13 @@ In `/var/www/html/.htaccess` (access with `docker exec -it nextcloud bash`)
 
 Cron is set as Webcron (couldn't get the Cron version working). Installed OMV anacron and create a weekly job: `wget --spider https://office.kingma.ch/cron.php`
 
+## logs
+
+Follow nextcloud logs with
+
+```sh
+ssh -t srv-nas-pi "sudo docker container logs nextcloud --follow"
+```
 
 
 ## get version info
