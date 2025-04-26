@@ -1,4 +1,8 @@
 # This is a Docker Compose file for running Nginx Proxy Manager.
+
+networks:
+  proxy:
+    external: true
 services:
   nginx-proxy:
     image: 'jc21/nginx-proxy-manager:latest'
@@ -16,7 +20,3 @@ services:
     volumes:
       - ./data:/data
       - ./letsencrypt:/etc/letsencrypt
-
-networks:
-  proxy:
-    external: true

@@ -1,6 +1,11 @@
 # This is a Docker Compose file for running nextcloud with a MariaDB database and Redis cache.
 # it uses the proxy netowrk to allow for reverse proxying through Nginx Proxy Manager.
 
+networks:
+  backend:
+    driver: bridge
+  proxy:
+    external: true
 services:
   # Nextcloud server, reachable only over nginx-proxy
   nextcloud:
@@ -12,7 +17,7 @@ services:
       - nextclouddb
       - redis
     networks:
-      - backend  # Attach to backend network
+      - backend # Attach to backend network
       - proxy
     volumes:
       - ./custom_apps:/var/www/html/custom_apps
@@ -35,7 +40,7 @@ services:
     restart: unless-stopped
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     networks:
-      - backend  # Attach to backend network
+      - backend # Attach to backend network
     volumes:
       - ./nextclouddb:/var/lib/mysql
     environment:
@@ -51,12 +56,6 @@ services:
     container_name: redis
     restart: unless-stopped
     networks:
-      - backend  # Attach to backend network
+      - backend # Attach to backend network
     volumes:
-      - ./redis:/data  
-
-networks:
-  backend:
-    driver: bridge
-  proxy:
-    external: true
+      - ./redis:/data
