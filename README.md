@@ -6,7 +6,7 @@ IP | what | notes
 -|-|-
 192.168.1.1 | LAN | sunrise router
 192.168.1.20 | srv-nas-pi | via Renkforce USB
-188.155.240.245 | WAN | https://office.kingma.ch, https://speed.kingma.ch
+188.155.240.245 | WAN | https://office.kingma.ch, http://speed.kingma.ch
 
 Nameserver with metanet https://cicero.metanet.cu:8443
 
