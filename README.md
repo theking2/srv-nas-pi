@@ -1,5 +1,24 @@
 # srv-nas-pi
 
+## PI5
+
+Add this to `/boot/firmware/config.txt`
+
+```ini
+dtparam=pciex1
+dtparam=pciex1_gen=3
+dtoverlay=dwc2,dr_mode=peripheral
+```
+
+Needed for:
+
+- penta pcie board
+- Renkforce USB-Ethernet adaptor (???)
+
+The last is weird as it should be in host mode for a perepheral. 
+
+Open Mediavault installed
+
 ## Router setup
 
 IP | what | notes
