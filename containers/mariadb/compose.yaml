@@ -3,7 +3,7 @@ services:
   db:
     image: mariadb:11    
     environment:
-      MYSQL_ROOT_PASSWORD: Sepik12
+      MYSQL_ROOT_PASSWORD: Geheim
     volumes:
       - type: bind
         source: ./mariadb_data
