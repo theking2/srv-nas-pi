@@ -1,6 +1,4 @@
 # This is a Docker Compose file for running nextcloud with a MariaDB database and Redis cache.
-# it uses the proxy netowrk to allow for reverse proxying through Nginx Proxy Manager.
-
 networks:
   backend:
     driver: bridge

@@ -9,6 +9,5 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     network_mode: host
-    environment:
-      - HTTP_PORT=9000
+    environment: [ HTTP_PORT=9000 ]
     restart: always

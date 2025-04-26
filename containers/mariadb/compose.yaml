@@ -1,12 +1,10 @@
 # This is a Docker Compose file for running a MariaDB container with persistent storage.
+name: db
 services:
   db:
-    image: mariadb:11    
-    environment:
-      MYSQL_ROOT_PASSWORD: Geheim
-    volumes:
-      - type: bind
-        source: ./mariadb_data
-        target: /var/lib/mysql
-    network_mode: host
+    container_name: mariadb
     restart: always
+    image: mariadb:11
+    environment: [ MYSQL_ROOT_PASSWORD=geheim ]
+    volumes: [ ./mariadb_data:/var/lib/mysql:rw ]
+    network_mode: host 

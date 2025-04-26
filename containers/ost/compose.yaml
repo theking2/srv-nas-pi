@@ -1,5 +1,9 @@
 # This is a Docker Compose file for a Speedtest container.
-# it uses the proxy netowrk to allow for reverse proxying through Nginx Proxy Manager.
+# it uses the proxy network to allow for reverse proxying through Nginx Proxy Manager.
+networks:
+  proxy:
+    external: true
+
 services:
   speedtest:
     container_name: openspeedtest
@@ -7,7 +11,3 @@ services:
     ports: [ "3000:3000", "3001:3001" ]
     networks: [ proxy ]
     restart: unless-stopped
-
-networks:
-  proxy:
-    external: true
