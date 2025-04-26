@@ -27,6 +27,9 @@ none
 
 name | purpose
 -|-
+bridge|build-in default driver
+host|unisolated host driver
+none|isolated driver
 proxy | connects `npm` to the proxied servers
-my-strom_default | (shouldv't named that one myself)
+my-strom_web | (shouldv't named that one myself)
 nextcloud_backend | connects redis, nextcloud, nextclouddb
