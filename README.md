@@ -2,7 +2,7 @@
 
 ## PI5
 
-Connected to LAN on the ethernet port to WAN on a Renkforce USB-Ethernet cable.
+Connected to LAN on the ethernet port and to WAN on a Renkforce USB-Ethernet cable.
 
 Add this to `/boot/firmware/config.txt`
 
