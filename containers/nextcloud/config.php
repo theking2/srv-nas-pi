@@ -34,6 +34,7 @@ $CONFIG = [
     [ 
       0 => 'srv-nas-pi.kingma:8080',
       1 => 'office.kingma.ch',
+      2 => 'www.king.ma',
     ],
   'overwrite.cli.url'        => 'http://srv-nas-pi.kingma:8080',
   'overwriteprotocol'        => 'https',
