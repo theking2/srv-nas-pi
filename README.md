@@ -2,7 +2,7 @@
 
 ## PI5
 
-Connected to LAN on the ethernet port and to WAN on a Renkforce USB-Ethernet cable.
+Connected to LAN on the PI's ethernet port and to WAN on a Renkforce USB-Ethernet cable.
 
 Add this to `/boot/firmware/config.txt`
 
@@ -42,7 +42,13 @@ IP | what | notes
 192.168.1.20 | srv-nas-pi | via Renkforce USB
 188.155.240.245 | WAN | https://office.kingma.ch, http://speed.kingma.ch, https://office.king.ma
 
-Nameserver with metanet https://cicero.metanet.cu:8443
+## Nameserver
+
+All public names are in metanet NS
+
+## Routing and PAT
+
+In dedicated office ISP. (Home traffic and LAN over a secondary ISP, hence the two nic)
 
 Port | forwared | What
 -|-|-
