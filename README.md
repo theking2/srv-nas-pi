@@ -40,7 +40,7 @@ Open Mediavault installed
 
 IP | what | notes
 -|-|-
-192.168.1.1 | LAN | sunrise router
+192.168.1.1 | LAN | ISP1 router
 192.168.1.20 | srv-nas-pi | via Renkforce USB
 188.155.240.245 | WAN | https://office.kingma.ch, http://speed.kingma.ch, https://office.king.ma
 
@@ -50,7 +50,7 @@ All public names are in metanet NS
 
 ## Routing and PAT
 
-In dedicated office ISP. (Home traffic and LAN over a secondary ISP, hence the two nic)
+In a dedicated office ISP with provided Sagecom router. (Home traffic and LAN over a secondary ISP, hence the two nic)
 
 Port | forwared | What
 -|-|-
