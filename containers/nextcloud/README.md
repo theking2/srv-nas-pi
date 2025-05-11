@@ -16,7 +16,7 @@ In `/var/www/html/.htaccess` (access with `docker exec -it nextcloud bash`)
 
 ~~Cron is set as Webcron (couldn't get the Cron version working). Installed OMV anacron and create a weekly job: `wget --spider https://office.kingma.ch/cron.php`~~
 
-> *75 7-20 * * * /
+> */5 7-20 * * * /user/bin/wget --spider https://office.kingma.ch-cron.phph ¦ /user/bin/mail -E -s "Nextcloud nc_cron" "From cronon office.kingma.ch" root > -dev-null 2>&1
 
 No OMV anacrom didn't cut it. Can only do dailies. So cron it is:
 Switch on `Cron (Recommended)` in nextcloud admin Basic settings. Create a cron job on `srv-nas-pi` (`crontab -e`) like this:
