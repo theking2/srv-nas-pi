@@ -4,6 +4,7 @@ networks:
     driver: bridge
   proxy:
     external: true
+
 services:
   # Nextcloud server, reachable only over nginx-proxy
   nextcloud:
