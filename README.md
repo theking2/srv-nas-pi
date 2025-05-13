@@ -38,14 +38,15 @@ Open Mediavault installed
 
 ## Shares
 
-CHANGE_TO_COMPOSE_DATA_PATH is set to point to `/pool0/storage/compose`
+`CHANGE_TO_COMPOSE_DATA_PATH` is set to point to `/pool0/storage/compose`.
+compose files that use `./` point to `/pool0/main/compose/appdata/<container-name>`
 
-| Name                   | Device        | Relative Path                        | Absolute Path                                                  |
-|------------------------|---------------|--------------------------------------|----------------------------------------------------------------|
+| Name                  | Device        | Relative Path                       | Absolute Path                                                  |
+|-----------------------|---------------|-------------------------------------|----------------------------------------------------------------|
 | appdata               | poolO/main    | compose/appdata/                    | /poolO/main/compose/appdata                                    |
 | backup                | poolO/storage | backup/                             | /poolO/storage/backup                                          |
 | compose               | poolO/storage | compose/                            | /poolO/storage/compose                                         |
-| compose_backup        | poolO/main    | compose/backup/                     | /poolO/main/compose/backup                                     |
+| compose_backup        | poolO/archive | long_archive/backup                 | /poolO/archive/long_archive/backup                             |
 | media                 | poolO/archive | media/                              | /poolO/archive/media                                           |
 | transmission_downloads| poolO/storage | compose/downloads/complete/         | /poolO/storage/compose/downloads/complete                      |
 | transmission_watch    | poolO/storage | compose/watch/                      | /poolO/storage/compose/watch                                   |
