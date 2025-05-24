@@ -7,4 +7,4 @@ services:
     image: mariadb:11
     environment: [ MYSQL_ROOT_PASSWORD=geheim ]
     volumes: [ ./mariadb_data:/var/lib/mysql:rw ]
-    network_mode: host 
+    network_mode: host

@@ -1,6 +1,10 @@
 # srv-nas-pi
 
+Is a home server project that was build with Pi5, Radxa Penta PCI board, 4 2TB SSDs, a USB-Ethernet adaptor. Software Open Media Vault with Plugins ZFS and Compose. As container Lyrion Music Server, OpenSpeedTest, Nextcloud and a small home webserver for the local IoT appliances. Backups are on the eSATAx connected HDD and a standby TrueNAS. A seconds Pi5 Based OMV with virtually the same setup is used for lab tests.
+
 ## PI5
+
+Connected to LAN on the PI's ethernet port and to WAN on a Renkforce USB-Ethernet cable.
 
 Add this to `/boot/firmware/config.txt`
 
@@ -32,21 +36,41 @@ Open Mediavault installed
       pool0/main     4.77G  5.23G  3.51G  /pool0/main
       pool0/storage   415G   385G   407G  /pool0/storage
 
+## Shares
+
+`CHANGE_TO_COMPOSE_DATA_PATH` is set to point to `/pool0/storage/compose`. Compose `yaml` files that use `./` point to `/pool0/main/compose/appdata/<container-name>`
+
+| Name                  | Device        | Relative Path                       | Absolute Path                                                  |
+|-----------------------|---------------|-------------------------------------|----------------------------------------------------------------|
+| appdata               | poolO/main    | compose/appdata/                    | /poolO/main/compose/appdata                                    |
+| backup                | poolO/storage | backup/                             | /poolO/storage/backup                                          |
+| compose               | poolO/storage | compose/                            | /poolO/storage/compose                                         |
+| compose_backup        | poolO/archive | long_archive/backup                 | /poolO/archive/long_archive/backup                             |
+| media                 | poolO/archive | media/                              | /poolO/archive/media                                           |
+| transmission_downloads| poolO/storage | compose/downloads/complete/         | /poolO/storage/compose/downloads/complete                      |
+| transmission_watch    | poolO/storage | compose/watch/                      | /poolO/storage/compose/watch                                   |
+
+
 ## Router setup
 
 IP | what | notes
 -|-|-
-192.168.1.1 | LAN | sunrise router
+192.168.1.1 | LAN | ISP1 router
 192.168.1.20 | srv-nas-pi | via Renkforce USB
-188.155.240.245 | WAN | https://office.kingma.ch, http://speed.kingma.ch
+188.155.240.245 | WAN | https://office.kingma.ch, http://speed.kingma.ch, https://office.king.ma
 
-Nameserver with metanet https://cicero.metanet.cu:8443
+## Nameserver
+
+All public names are in metanet NS
+
+## Routing and PAT
+
+In a dedicated office ISP with provided Sagecom router. (Home traffic and LAN over a secondary ISP, hence the two nic)
 
 Port | forwared | What
 -|-|-
 80 | 192.168.1.20:9080 | open speedtest (?)
 443 | 192.168.1.20:9443 | nextcloud
 81 | 192.168.20:81 | NPM admin, off
-8080 | 192.168.1.20:8080 | open nextcloud, off
+8080 | 192.168.1.20:8080 | open nextcloud test without proxy
 3000 | 192.168.1.20:3000 | open speedtest, off
-123 | 192.168.1.20:123 | time

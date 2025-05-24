@@ -27,13 +27,14 @@ $CONFIG = [
       'port'     => 6379,
     ],
   'upgrade.disable-web'      => true,
-  'instanceid'               => 'oc6oc6hi85a5',
-  'passwordsalt'             => 'rKZdXH0AX+eLcwQhJkDmFt/qJ8kTzq',
-  'secret'                   => 'Mv6+FzMFe81mpLrDXhikIjkUZHSvcI2fUp/Qr63GtqnGeXUl',
+  'instanceid'               => 'aaaaa',
+  'passwordsalt'             => 'aaaaa',
+  'secret'                   => 'aaaaa',
   'trusted_domains'          =>
     [ 
       0 => 'srv-nas-pi.kingma:8080',
       1 => 'office.kingma.ch',
+      2 => 'office.king.ma',
     ],
   'overwrite.cli.url'        => 'http://srv-nas-pi.kingma:8080',
   'overwriteprotocol'        => 'https',
