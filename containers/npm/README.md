@@ -1,5 +1,13 @@
 # NPM Nginx Proxy Manager
 
+Docker name: nginx-proxy
+
+## logs
+
+```sh
+ssh -t srv-nas-pi "sudo docker container logs nginx-proxy --follow"
+```
+
 ## SSL Certificates
 
 - office.kingma.ch, Let's Encrypt
