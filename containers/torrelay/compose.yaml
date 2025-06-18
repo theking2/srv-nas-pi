@@ -1,0 +1,19 @@
+services:
+
+  torrelay:
+    container_name: torrelay
+    image: wollomatic/torrelay:0.4.8.16
+    restart: unless-stopped
+    cpus: 2
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    stop_grace_period: 2m
+    volumes:
+      - ./torrc:/etc/tor/torrc:ro
+      - data:/var/lib/tor
+    network_mode: host # check if you want this
+
+volumes:
+  data:
+    name: torrelay
