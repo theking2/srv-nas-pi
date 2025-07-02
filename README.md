@@ -38,13 +38,14 @@ Open Mediavault installed
 
 ## Shares
 
-`CHANGE_TO_COMPOSE_DATA_PATH` is set to point to `/pool0/storage/compose`. Compose `yaml` files that use `./` point to `/pool0/main/compose/appdata/<container-name>`
+ * `CHANGE_TO_COMPOSE_DATA_PATH` is set to point to `/pool0/storage/compose` and is used for large data
+ * Compose `yaml` files that use `./` point to `/pool0/main/compose/appdata/<container-name>` and is used for configuration files.
 
 | Name                  | Device        | Relative Path                       | Absolute Path                                                  |
 |-----------------------|---------------|-------------------------------------|----------------------------------------------------------------|
-| appdata               | poolO/main    | compose/appdata/                    | /poolO/main/compose/appdata                                    |
+| appdata<br>`./<container-name>`      | poolO/main    | compose/appdata/                    | /poolO/main/compose/appdata                                    |
 | backup                | poolO/storage | backup/                             | /poolO/storage/backup                                          |
-| compose               | poolO/storage | compose/                            | /poolO/storage/compose                                         |
+| compose<br>`CHANGE_TO_COMPOSE_DATA_PATH`     | poolO/storage | compose/     | /poolO/storage/compose                                         |
 | compose_backup        | poolO/archive | long_archive/backup                 | /poolO/archive/long_archive/backup                             |
 | media                 | poolO/archive | media/                              | /poolO/archive/media                                           |
 | transmission_downloads| poolO/storage | compose/downloads/complete/         | /poolO/storage/compose/downloads/complete                      |
