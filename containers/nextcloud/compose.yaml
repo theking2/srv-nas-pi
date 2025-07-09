@@ -16,7 +16,7 @@ services:
       - nextclouddb
       - redis
     networks:
-      - backend # Attach to backend network
+      - backend  # Attach to backend network
       - proxy
     volumes:
       - ./custom_apps:/var/www/html/custom_apps
@@ -39,9 +39,10 @@ services:
     restart: unless-stopped
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     networks:
-      - backend # Attach to backend network
+      - backend  # Attach to backend network
     volumes:
       - ./nextclouddb:/var/lib/mysql
+      - /pool0/storage/nextcloud_data:/backup
     environment:
       - PUID=1000
       - PGID=1000
@@ -55,6 +56,6 @@ services:
     container_name: redis
     restart: unless-stopped
     networks:
-      - backend # Attach to backend network
+      - backend  # Attach to backend network
     volumes:
-      - ./redis:/data
+      - ./redis:/data  
