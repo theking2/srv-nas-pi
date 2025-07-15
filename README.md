@@ -58,7 +58,7 @@ IP | what | notes
 -|-|-
 192.168.1.1 | LAN | ISP1 router
 192.168.1.20 | srv-nas-pi | via Renkforce USB
-188.155.240.245 | WAN | https://office.kingma.ch, http://speed.kingma.ch, https://office.king.ma
+188.155.240.245 | WAN | https://collab.kingma.ch, https://office.kingma.ch, http://speed.kingma.ch, https://office.king.ma
 
 ## Nameserver
 
@@ -71,7 +71,8 @@ In a dedicated office ISP with provided Sagecom router. (Home traffic and LAN ov
 Port | forwared | What
 -|-|-
 80 | 192.168.1.20:9080 | open speedtest (?)
-443 | 192.168.1.20:9443 | nextcloud
-81 | 192.168.20:81 | NPM admin, off
-8080 | 192.168.1.20:8080 | open nextcloud test without proxy
-3000 | 192.168.1.20:3000 | open speedtest, off
+443 | 192.168.1.20:9443 | nextcloud/collaborate
+81 | 192.168.20:81 | NPM admin, off (we manage from LAN only)
+8080 | 192.168.1.20:8080 | open nextcloud test without proxy, off
+9980 | 192.168.1.20:9980 | open collabora test without proxy, off
+3000 | 192.168.1.20:3000 | open speedtest
