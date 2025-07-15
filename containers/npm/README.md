@@ -22,3 +22,6 @@ ssh -t srv-nas-pi "sudo docker container logs nginx-proxy --follow"
 
 - data is in `/pool0/main/compose/appdata/npm/data`
 - letsencrypt in `/pool0/main/compose/appdata/npm/letsencrypt`
+
+
+<img width="2359" height="954" alt="afbeelding" src="https://github.com/user-attachments/assets/ea5d3673-3fd3-496a-9bd4-c5d80ce863e7" />
