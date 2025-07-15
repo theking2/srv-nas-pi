@@ -1,0 +1,28 @@
+networks:
+  proxy:
+    external: true
+
+services:
+  collabora:
+    image: collabora/code:latest
+    container_name: collabora
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - seccomp=unconfined  
+    ports: ['192.168.1.20:9980:9980']
+    networks: ['proxy']
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+#     -  CHANGE_TO_COMPOSE_DATA_PATH/coolwsd:/etc/coolwsd
+    environment:
+      - domain=office.kingma.ch       # <== look mam, no / !
+      - server_name=collab.kingma.ch  # <== and not here either.
+      - extra_params=
+        --o:ssl.enable=false
+        --o:ssl.termination=true
+        --o:logging.level=debug
+      - TZ=Europe/Zurich
+      - username=${COLLABORA_USER}
+      - password=${COLLABORA_PASS}
