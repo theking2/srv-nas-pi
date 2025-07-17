@@ -43,14 +43,11 @@ Open Mediavault installed
 
 | Name                  | Device        | Relative Path                       | Absolute Path                                                  |
 |-----------------------|---------------|-------------------------------------|----------------------------------------------------------------|
-| appdata<br>`./<container-name>`      | poolO/main    | compose/appdata/                    | /poolO/main/compose/appdata                                    |
-| backup                | poolO/storage | backup/                             | /poolO/storage/backup                                          |
-| compose<br>`CHANGE_TO_COMPOSE_DATA_PATH`     | poolO/storage | compose/     | /poolO/storage/compose                                         |
-| compose_backup        | poolO/archive | long_archive/backup                 | /poolO/archive/long_archive/backup                             |
-| media                 | poolO/archive | media/                              | /poolO/archive/media                                           |
-| transmission_downloads| poolO/storage | compose/downloads/complete/         | /poolO/storage/compose/downloads/complete                      |
-| transmission_watch    | poolO/storage | compose/watch/                      | /poolO/storage/compose/watch                                   |
-
+| appdata<br>`./<container-name>`| pool0/main | compose/appdata/              | /pool0/main/compose/appdata                                    |
+| backup                | pool0/storage | backup/                             | /pool0/storage/backup                                          |
+| compose<br>`CHANGE_TO_COMPOSE_DATA_PATH`| pool0/storage | compose/          | /pool0/storage/compose                                         |
+| compose_backup        | pool0/archive | long_archive/backup                 | /pool0/archive/long_archive/backup                             |
+| media                 | pool0/archive | media/                              | /pool0/archive/media                                           |
 
 ## Router setup
 
