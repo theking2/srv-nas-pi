@@ -67,7 +67,7 @@ In a dedicated office ISP with provided Sagecom router. (Home traffic and LAN ov
 
 Port | forwared | What
 -|-|-
-80 | 192.168.1.20:9080 | open speedtest (?)
+80 | 192.168.1.20:9080 | needed for speedtest (and let's encrypt renewals?)
 443 | 192.168.1.20:9443 | nextcloud/collaborate
 81 | 192.168.20:81 | NPM admin, off (we manage from LAN only)
 8080 | 192.168.1.20:8080 | open nextcloud test without proxy, off
