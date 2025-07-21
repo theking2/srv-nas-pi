@@ -22,7 +22,9 @@ No OMV anacrom didn't cut it. Can only do dailies. So cron it is:
 Switch on `Cron (Recommended)` in nextcloud admin Basic settings. Create a cron job on `srv-nas-pi` (`crontab -e`) like this:
 
 ```sh
+# m h  dom mon dow   command
 */10 * * * * sudo docker exec -u www-data nextcloud php /var/www/html/cron.php
+   0 2 * * * sudo docker exec -it nextcloud-db /backup/backup-db
 ```
 which will start the cron process every 10min on the `nextcloud` container. Check by navigating to `https://office.example.com/settings/admin`.
 
