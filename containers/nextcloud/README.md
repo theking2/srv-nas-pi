@@ -14,11 +14,6 @@ In `/var/www/html/.htaccess` (access with `docker exec -it nextcloud bash`)
 
 ## cron
 
-~~Cron is set as Webcron (couldn't get the Cron version working). Installed OMV anacron and create a weekly job: `wget --spider https://office.kingma.ch/cron.php`~~
-
-> */5 7-20 * * * /user/bin/wget --spider https://office.kingma.ch-cron.phph ¦ /user/bin/mail -E -s "Nextcloud nc_cron" "From cronon office.kingma.ch" root > -dev-null 2>&1
-
-No OMV anacrom didn't cut it. Can only do dailies. So cron it is:
 Switch on `Cron (Recommended)` in nextcloud admin Basic settings. Create a cron job on `srv-nas-pi` (`crontab -e`) like this:
 
 ```sh
@@ -26,7 +21,8 @@ Switch on `Cron (Recommended)` in nextcloud admin Basic settings. Create a cron 
 */10 * * * * sudo docker exec -u www-data nextcloud php /var/www/html/cron.php
    0 2 * * * sudo docker exec -it nextcloud-db /backup/backup-db
 ```
-which will start the cron process every 10min on the `nextcloud` container. Check by navigating to `https://office.example.com/settings/admin`.
+
+Check by navigating to `https://office.example.com/settings/admin` and check the `/backup` folder which is located in `/pool0/storage/nextcloud_data`.
 
 
 ## logs
