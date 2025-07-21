@@ -1,0 +1,3 @@
+#! /bin/bash
+
+mariadb-dump --user=nextcloud --password=dbpassword nextcloud | gzip > /backup/nextcloud-sqlbkp.sql.gz
