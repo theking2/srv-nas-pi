@@ -48,6 +48,12 @@ or remote
 ssh -t srv-nas-pi "sudo ./get_nextcloud_version"
 ```
 
+## Run occ, Example 
+
+```sh
+ssh -t srv-nas-pi "sudo docker exec -it nextcloud /var/www/html/occ db:add-missing-indices"
+```
+
 Currently
 
 * Nextcloud Server version:
