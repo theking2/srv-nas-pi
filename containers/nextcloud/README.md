@@ -42,6 +42,12 @@ Execute as su
 sudo ./get_nextcloud_version
 ```
 
+or remote
+
+```
+ssh -t srv-nas-pi "sudo ./get_nextcloud_version"
+```
+
 Currently
 
 * Nextcloud Server version:
