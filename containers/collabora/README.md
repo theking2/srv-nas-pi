@@ -5,7 +5,7 @@
  * Add Apps `Nextcloud Office` (richdocuments) to nextcloud.
  * Create a NS entry (different from nextcloud)
  * Setup the docker container
- * Add collab.kingma.ch to NPM forward collab.kingma.ch to http://192.168.1.20:9980 and install the SSL Let's encrypt certificate.
+ * Add collab.kingma.ch to NPM forward collab.kingma.ch to http://192.168.0.11:9980 and install the SSL Let's encrypt certificate.
  * In Nextcloud Office settings set `https://collab.kingma.ch` as _URL (and Port) of Collabora Online-server_
 
 ## NS
