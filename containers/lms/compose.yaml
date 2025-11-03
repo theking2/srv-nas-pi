@@ -3,7 +3,7 @@ services:
     container_name: lms
     image: lmscommunity/lyrionmusicserver
     volumes:
-      - ./config:/config:rw
+      - CHANGE_TO_COMPOSE_DATA_PATH/lms_config:/config:rw
       - /pool0/archive/media/audio/music:/music:ro
       - /pool0/archive/media/playlists:/playlist:rw
       - /etc/localtime:/etc/localtime:ro
