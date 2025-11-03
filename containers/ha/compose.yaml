@@ -1,0 +1,10 @@
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    volumes:
+      - CHANGE_TO_COMPOSE_DATA_PATH/ha_config:/config
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    privileged: true
+    network_mode: host  # Allows Home Assistant to see all devices on the local network
