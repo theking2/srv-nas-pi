@@ -13,9 +13,9 @@ services:
       - PUID=1000
       - PGID=1000
     ports:
-      - '9080:80'
-      - '81:81'
-      - '9443:443'
+      - '192.168.0.11:9080:80' # for Let-s encrypt renewal
+      - '192.168.0.11:9443:443' # proxied
+      - '192.168.111.11:81:81'
     volumes:
-      - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt
+      - CHANGE_TO_COMPOSE_DATA_PATH/npm/data:/data
+      - CHANGE_TO_COMPOSE_DATA_PATH/npm/letsencrypt:/etc/letsencrypt
