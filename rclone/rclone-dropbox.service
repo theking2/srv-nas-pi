@@ -1,0 +1,23 @@
+[Unit]
+Description=RClone Dropbox Mount
+After=network-online.target
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/rclone mount Dropbox:/ /pool0/storage/Dropbox \
+  --allow-other \
+  --verbose \
+  --vfs-cache-mode full \
+  --dir-cache-time 72h \
+  --poll-interval 15s \
+  --cache-dir /tmp/rclone-cache \
+  --umask 002 \
+  --allow-non-empty
+ExecStop=/bin/fusermount -u /pool0/rclone/Dropbox
+Restart=always
+RestartSec=10
+User=1001
+Group=100
+
+[Install]
+WantedBy=default.target
