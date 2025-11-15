@@ -86,9 +86,45 @@ Port | forwared | What
 │   └── media
 ├── main
 │   └── compose
+│       ├── appdata
+│       ├── docker
+│       ├── global.env
+│       └── rclone
 └── storage
     ├── Dropbox
     ├── backup
     ├── compose
     └── nextcloud_data
 ```
+
+## pool0/storage/compose – tree
+
+```
+storage/compose/
+├── collabora_coolwsd
+│   ├── coolkitconfig.xcu
+│   └── coolwsd.xml
+├── lms_config
+│   ├── cache
+│   ├── core
+│   ├── logs
+│   └── prefs
+├── mariadb_data
+...
+├── my-strom_htdocs
+...
+├── nextcloud
+│   ├── config
+│   ├── custom_apps
+│   ├── nextclouddb
+│   └── redis
+├── npm
+│   ├── data
+│   └── letsencrypt
+├── torrelay
+│   └── torrc
+└── transmission
+    ├── config
+    └── watch
+``` 
+
