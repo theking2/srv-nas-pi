@@ -73,3 +73,22 @@ Port | forwared | What
 8080 | 192.168.0.11:8080 | open nextcloud test without proxy, off
 9980 | 192.168.0.11:9980 | open collabora test without proxy, off
 3000 | 192.168.0.11:3000 | open speedtest
+
+
+## pool0 – tree
+
+```
+/pool0 $ tree -L 2
+.
+├── archive
+│   ├── archive
+│   ├── long_archive
+│   └── media
+├── main
+│   └── compose
+└── storage
+    ├── Dropbox
+    ├── backup
+    ├── compose
+    └── nextcloud_data
+```
