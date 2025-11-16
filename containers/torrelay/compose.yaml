@@ -2,7 +2,8 @@ services:
 
   torrelay:
     container_name: torrelay
-    image: wollomatic/torrelay:0.4.8.16
+    build: torrelay
+    image: torrelay
     restart: unless-stopped
     cpus: 2
     security_opt:
@@ -10,7 +11,7 @@ services:
     read_only: true
     stop_grace_period: 2m
     volumes:
-      - ./torrc:/etc/tor/torrc:ro
+      - CHANGE_TO_COMPOSE_DATA_PATH/torrelay/torrc:/etc/tor/torrc:ro
       - data:/var/lib/tor
     network_mode: host # check if you want this
 
