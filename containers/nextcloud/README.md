@@ -32,7 +32,9 @@ Follow nextcloud logs with
 ```sh
 ssh -t srv-nas-pi "sudo docker container logs nextcloud --follow"
 ```
+## check status
 
+To check the current status use `https://office.kingma.ch/status.php`
 
 ## get version info
 
