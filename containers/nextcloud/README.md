@@ -48,7 +48,7 @@ or remote
 ssh -t srv-nas-pi "sudo ./get_nextcloud_version"
 ```
 
-The current output is here; (current-config.txt)[https://github.com/theking2/srv-nas-pi/blob/main/containers/nextcloud/current-config.txt]
+The current output is here; [current-config.txt](https://github.com/theking2/srv-nas-pi/blob/main/containers/nextcloud/current-config.txt)
 
 ## Run occ, Example 
 
