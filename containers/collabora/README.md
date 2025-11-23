@@ -45,3 +45,28 @@ Contrary to certain sources a `\` to escape the dots `.` is not needed. It is no
 ```
 
 After adding the collab url.
+
+## testing 1,2,3...
+
+The collabora server can be tested with `https://collab.kingma.ch/hosting/capabilities` with the current result:
+
+```js
+{
+  "convert-to": {
+    "available": false
+  },
+  "hasDocumentSigningSupport": true,
+  "hasMobileSupport": true,
+  "hasProxyPrefix": false,
+  "hasSettingIframeSupport": true,
+  "hasTemplateSaveAs": false,
+  "hasTemplateSource": true,
+  "hasWASMSupport": false,
+  "hasWopiAccessCheck": true,
+  "hasZoteroSupport": true,
+  "productName": "Collabora Online Development Edition",
+  "productVersion": "25.04.7.2",
+  "productVersionHash": "a246f9ab3c",
+  "serverId": "4bf4d53f"
+}
+``` 
