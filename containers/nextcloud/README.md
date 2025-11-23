@@ -34,7 +34,7 @@ ssh -t srv-nas-pi "sudo docker container logs nextcloud --follow"
 ```
 ## check status
 
-To check the current status use [`https://office.kingma.ch/status.php`](https://office.kingma.ch/status.php)
+To check the current status use [`https://office.kingma.ch/status.php`](https://office.kingma.ch/status.php){:target="_blank"}
 
 ## get version info
 
