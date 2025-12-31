@@ -1,10 +1,18 @@
+---
+# Date: 2025-06-01
+# https://hub.docker.com/r/linuxserver/homeassistant
 services:
   homeassistant:
+    image: lscr.io/linuxserver/homeassistant:latest
     container_name: homeassistant
-    image: ghcr.io/home-assistant/home-assistant:stable
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=Etc/UTC
     volumes:
-      - CHANGE_TO_COMPOSE_DATA_PATH/ha_config:/config
-      - /etc/localtime:/etc/localtime:ro
+      - CHANGE_TO_COMPOSE_DATA_PATH/homeassistant:/config
+    ports:
+      - 8123:8123 #optional
+    # devices:
     restart: unless-stopped
-    privileged: true
-    network_mode: host  # Allows Home Assistant to see all devices on the local network
