@@ -8,11 +8,6 @@ Docker name: nginx-proxy
 ssh -t srv-nas-pi "sudo docker container logs nginx-proxy --follow"
 ```
 
-## SSL Certificates
-
-- office.kingma.ch, Let's Encrypt
-
-
 ## config
 
 - data is in `/pool0/main/compose/appdata/npm/data`
