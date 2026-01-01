@@ -1,3 +1,8 @@
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.20.0.4 # Add the IP address of the proxy server
+
 maxcube:
   gateways:
     - host: 192.168.111.6
