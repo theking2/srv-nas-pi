@@ -24,39 +24,22 @@ Switch on `Cron (Recommended)` in nextcloud admin Basic settings. Create a cron 
 
 Check by navigating to `https://office.example.com/settings/admin` and check the `/backup` folder which is located in `/pool0/storage/nextcloud_data`.
 
+## maintenance
 
-## logs
 
-Follow nextcloud logs with
+what|cmd
+-|-
+list background jobs|`ssh -t srv-nas-pi "sudo docker exec -it nextcloud ./occ background-job:list"`
+follow logs|`ssh -t srv-nas-pi "sudo docker container logs nextcloud --follow"`
+check version|`ssh -t srv-nas-pi "sudo ./get_nextcloud_version"`
+indexes|`ssh -t srv-nas-pi "sudo docker exec -it nextcloud /var/www/html/occ db:add-missing-indices"`
 
-```sh
-ssh -t srv-nas-pi "sudo docker container logs nextcloud --follow"
-```
 ## check status
 
 To check the current status use [`https://office.kingma.ch/status.php`](https://office.kingma.ch/status.php)
 
-## get version info
-
-Execute as su
-
-```sh
-sudo ./get_nextcloud_version
-```
-
-or remote
-
-```
-ssh -t srv-nas-pi "sudo ./get_nextcloud_version"
-```
-
 The current output is here; [current-config.txt](https://github.com/theking2/srv-nas-pi/blob/main/containers/nextcloud/current-config.txt)
 
-## Run occ, Example 
-
-```sh
-ssh -t srv-nas-pi "sudo docker exec -it nextcloud /var/www/html/occ db:add-missing-indices"
-```
 
 Currently
 
