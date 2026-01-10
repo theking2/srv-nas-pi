@@ -23,9 +23,7 @@ Switch on `Cron (Recommended)` in nextcloud admin Basic settings. Create a cron 
 ```
 
 > [!TIP]
-> These are currently executed in the OMV [System Scheduled tasks](https://srv-nas-pi.kingma/#/system/cron) and currently not active in bare cron.
-
-Check by navigating to `https://office.example.com/settings/admin` and check the `/backup` folder which is located in `/pool0/storage/nextcloud_data`.
+> These are currently executed in the OMV [System Scheduled tasks](https://srv-nas-pi.kingma/#/system/cron) and not active in bare cron.
 
 ## maintenance
 
