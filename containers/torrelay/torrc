@@ -1,6 +1,6 @@
 Nickname theking2
 ContactInfo theking2@king.ma
-ORPort 9001
+ORPort 9001 IPv4Only
 BandwidthRate 25 MBytes
 MaxAdvertisedBandwidth 8 MBytes
 MaxMemInQueues 3GB
