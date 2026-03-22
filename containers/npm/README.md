@@ -15,7 +15,8 @@ ssh -t srv-nas-pi "sudo docker container logs nginx-proxy --follow"
 
 ## Proxy Hosts
 
-<img width="2620" height="1282" alt="image" src="https://github.com/user-attachments/assets/b9165aa0-1f61-4c38-85aa-ebcea357981d" />
+<img width="1297" height="702" alt="image" src="https://github.com/user-attachments/assets/3f33aa66-2e42-4a26-a8ae-317bf71d3e58" />
+
 
 ## Certificates
 
