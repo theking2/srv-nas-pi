@@ -68,7 +68,7 @@ In a dedicated office ISP with provided Sagecom router. (Home traffic and LAN ov
 Port | forwared | What
 -|-|-
 80 | 192.168.0.11:9080 | needed for speedtest (and let's encrypt renewals?)
-443 | 192.168.0.11:9443 | nextcloud/collaborate
+443 | 192.168.0.11:9443 | nextcloud/onlyoffice-docserver
 81 | 192.168.0.11:81 | NPM admin, off (we manage from LAN only)
 8080 | 192.168.0.11:8080 | open nextcloud test without proxy, off
 9980 | 192.168.0.11:9980 | open collabora test without proxy, off
@@ -121,6 +121,14 @@ storage/compose/
 ├── npm
 │   ├── data
 │   └── letsencrypt
+├── onlyoffice
+│   ├── data
+│   ├── db
+│   ├── fonts
+│   ├── lib
+│   ├── logs
+│   ├── rabbitmq
+│   └── redis
 ├── torrelay
 │   └── torrc
 └── transmission
