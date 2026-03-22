@@ -1,0 +1,72 @@
+networks:
+  backend:
+    driver: bridge
+  proxy:
+    external: true
+
+services:
+  onlyoffice-documentserver:
+    image: onlyoffice/documentserver:latest
+    container_name: onlyoffice-docs
+    restart: unless-stopped
+    
+    ports:
+      # Map port 9003 on your OMV host to port 80 in the container
+      # Using 9003 to avoid conflicts with other services
+      - "9003:80"
+    
+    environment:
+      # JWT Security - Generate a strong random string
+      - JWT_ENABLED=true
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_HEADER=Authorization
+      
+      # Critical for OMV/Nextcloud integration (allows private IP communication)
+      - ALLOW_PRIVATE_IP_ADDRESS=true
+      - USE_UNAUTHORIZED_STORAGE=true
+      
+      # Timezone - adjust to your location
+      - TZ=Europe/Berlin
+      
+      # Performance tuning
+      - NODE_ENV=production
+      - REDIS_SERVER_HOST=localhost
+    
+    volumes:
+      # Main data directory - using the OMV shared folder structure
+      - /pool0/storage/compose/onlyoffice/logs:/var/log/onlyoffice
+      - /pool0/storage/compose/onlyoffice/data:/var/www/onlyoffice/Data
+      - /pool0/storage/compose/onlyoffice/lib:/var/lib/onlyoffice
+      - /pool0/storage/compose/onlyoffice/db:/var/lib/postgresql
+      - /pool0/storage/compose/onlyoffice/redis:/var/lib/redis
+      - /pool0/storage/compose/onlyoffice/rabbitmq:/var/lib/rabbitmq
+      - /pool0/storage/compose/onlyoffice/fonts:/usr/share/fonts/truetype/custom
+ #     - /pool0/storage/compose/onlyoffice/etc_onlyoffice_documentserver:/etc/onlyoffice/documentserver
+    
+    # Health check to ensure the service is running properly
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # Resource limits for OMV
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G
+    
+    # Logging to prevent disk fill-up
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    # Network mode - using bridge for OMV compatibility
+    networks:
+      - backend  # Attach to backend network
+      - proxy
