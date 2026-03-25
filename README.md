@@ -136,3 +136,30 @@ storage/compose/
     └── watch
 ``` 
 
+
+
+## Swap
+
+### create swap volume on zfs pool:
+
+```
+zfs create -V 4G -b $(getconf PAGESIZE) -o compression=zle \
+      -o logbias=throughput -o sync=always \
+      -o primarycache=metadata -o secondarycache=none \
+      -o com.sun:auto-snapshot=false pool0/swap
+
+mkswap /dev/zvol/pool0/swap
+```
+
+### add the swap to fstab
+
+```
+/dev/zvol/pool0/swap none swap discard 0 0
+```
+
+### disable swap creation
+
+```
+sudo systemctl disable dphys-swapfile
+```
+
