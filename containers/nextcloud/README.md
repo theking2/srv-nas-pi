@@ -32,7 +32,7 @@ what|cmd
 list background jobs|`ssh -t srv-nas-pi "sudo docker exec -it nextcloud ./occ background-job:list"`
 follow logs|`ssh -t srv-nas-pi "sudo docker container logs nextcloud --follow"`
 check version|`ssh -t srv-nas-pi "sudo ./get_nextcloud_version"`
-indexes|`ssh -t srv-nas-pi "sudo docker exec -it nextcloud /var/www/html/occ db:add-missing-indices"`
+indexes|`ssh -t srv-nas-pi "sudo docker exec -it nextcloud ./occ db:add-missing-indices"`
 
 ## check status
 
