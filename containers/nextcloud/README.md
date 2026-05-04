@@ -40,6 +40,9 @@ To check the current status use [`https://office.kingma.ch/status.php`](https://
 
 The current output is here; [current-config.txt](https://github.com/theking2/srv-nas-pi/blob/main/containers/nextcloud/current-config.txt)
 
+## copy support info to clipboard
+
+Copy the file `copy_nextcloud_version` to `~/.local/bin/` and make executable. Running `copy_nextcloud_version` copies the result of `get_nextcloud_version` to the clipboard which can than be pasted to the forum entry.
 
 Currently
 
