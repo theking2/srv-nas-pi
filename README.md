@@ -11,15 +11,17 @@ Add this to `/boot/firmware/config.txt`
 ```ini
 dtparam=pciex1
 dtparam=pciex1_gen=3
-dtoverlay=dwc2,dr_mode=peripheral
+dtoverlay=pcie-32bit-dma-pi5
+dtoverlay=dwc2,dr_mode=host
 ```
 
 Needed for:
 
 - penta pcie board
 - Renkforce USB-Ethernet adaptor (???)
+- pcie-32bit-dma-pi5 is needed because of newer kernel: ([dtoverlay=pcie-32bit-dma-pi5](https://forum.openmediavault.org/index.php?thread/59049-psa-rpi5-users-of-the-radxa-sata-hat-now-need-to-use-dtoverlay-pcie-32bit-dma-pi/#post437357))
 
-The last is weird as it should be in host mode for a peripheral. 
+
 
 Open Mediavault installed
 
