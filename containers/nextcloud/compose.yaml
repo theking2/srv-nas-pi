@@ -9,23 +9,27 @@ services:
   # Nextcloud server, reachable only over nginx-proxy
   nextcloud:
     image: nextcloud
+    cpus: 4
     container_name: nextcloud
     ports: [ "8080:80" ]
     restart: unless-stopped
     depends_on:
-      - nextclouddb
-      - redis
+      nextclouddb:
+        condition: service_healthy
+      redis:
+        condition: service_started
     networks:
       - backend  # Attach to backend network
       - proxy
     volumes:
-      - ./custom_apps:/var/www/html/custom_apps
-      - ./config:/var/www/html/config
+      - /pool0/storage/compose/nextcloud/custom_apps:/var/www/html/custom_apps
+      - /pool0/storage/compose/nextcloud/config:/var/www/html/config
       - /pool0/storage/nextcloud_data:/var/www/html/data
+      - /pool0/storage/compose/nextcloud/servername.conf:/etc/apache2/conf-enabled/servername.conf
     environment:
+      - TZ=Europe/Zurich
       - PUID=1000
       - PGID=1000
-      - TZ=Europe/Zurich
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
       - MYSQL_PASSWORD=dbpassword
@@ -40,9 +44,17 @@ services:
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     networks:
       - backend  # Attach to backend network
+    ports: [ "9306:3306" ]
     volumes:
-      - ./nextclouddb:/var/lib/mysql
+      - /pool0/storage/compose/nextcloud/nextclouddb:/var/lib/mysql
       - /pool0/storage/nextcloud_data:/backup
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      start_period: 1m
+      start_interval: 10s
+      interval: 1m
+      timeout: 5s
+      retries: 3
     environment:
       - PUID=1000
       - PGID=1000
@@ -55,7 +67,11 @@ services:
     image: redis:alpine
     container_name: redis
     restart: unless-stopped
+    logging:
+      options:
+        max-size: "10K"
+        max-file: "1"    
     networks:
       - backend  # Attach to backend network
     volumes:
-      - ./redis:/data  
+      - CHANGE_TO_COMPOSE_DATA_PATH/nextcloud/redis:/data  
