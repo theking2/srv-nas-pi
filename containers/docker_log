@@ -1,0 +1,171 @@
+#!/usr/bin/env python3
+"""
+Docker Container Log Size Calculator
+Lists all Docker containers with their log sizes and total log usage.
+"""
+
+import subprocess
+import json
+import sys
+from typing import Dict, List, Tuple
+
+
+def get_container_logs_size(container_id: str) -> int:
+    """
+    Get the log file size for a specific container.
+    
+    Args:
+        container_id: Docker container ID or name
+        
+    Returns:
+        Size of logs in bytes, or -1 if error
+    """
+    try:
+        # Get container info to find log path
+        inspect_cmd = ['docker', 'inspect', container_id]
+        container_info = subprocess.run(
+            inspect_cmd, 
+            capture_output=True, 
+            text=True, 
+            check=True
+        )
+        container_data = json.loads(container_info.stdout)[0]
+        
+        # Get log path from container info
+        log_path = container_data.get('LogPath', '')
+        
+        if not log_path:
+            return 0
+            
+        # Get file size using stat
+        stat_cmd = ['stat', '-c', '%s', log_path]
+        size_result = subprocess.run(
+            stat_cmd,
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        
+        return int(size_result.stdout.strip())
+        
+    except subprocess.CalledProcessError as e:
+        print(f"Error getting logs for container {container_id}: {e}", file=sys.stderr)
+        return -1
+    except (json.JSONDecodeError, KeyError, IndexError) as e:
+        print(f"Error parsing container info: {e}", file=sys.stderr)
+        return -1
+
+
+def format_size(size_bytes: int) -> str:
+    """
+    Format byte size to human-readable format.
+    
+    Args:
+        size_bytes: Size in bytes
+        
+    Returns:
+        Human-readable size string
+    """
+    if size_bytes < 0:
+        return "N/A"
+    
+    for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
+        if size_bytes < 1024.0:
+            return f"{size_bytes:.2f} {unit}"
+        size_bytes /= 1024.0
+    return f"{size_bytes:.2f} PB"
+
+
+def get_all_containers(include_all: bool = False) -> List[Dict]:
+    """
+    Get list of all Docker containers.
+    
+    Args:
+        include_all: If True, include stopped containers
+        
+    Returns:
+        List of container dictionaries
+    """
+    try:
+        if include_all:
+            cmd = ['docker', 'ps', '-a', '--format', 'json']
+        else:
+            cmd = ['docker', 'ps', '--format', 'json']
+            
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        
+        containers = []
+        for line in result.stdout.strip().split('\n'):
+            if line:
+                containers.append(json.loads(line))
+        
+        return containers
+        
+    except subprocess.CalledProcessError as e:
+        print(f"Error getting container list: {e}", file=sys.stderr)
+        return []
+    except json.JSONDecodeError as e:
+        print(f"Error parsing container list: {e}", file=sys.stderr)
+        return []
+
+
+def main():
+    """Main function to display container logs information."""
+    
+    # Parse command line arguments
+    include_all = False
+    if len(sys.argv) > 1 and sys.argv[1] in ['-a', '--all']:
+        include_all = True
+    
+    # Get containers
+    containers = get_all_containers(include_all)
+    
+    if not containers:
+        print("No Docker containers found or unable to connect to Docker daemon.")
+        sys.exit(1)
+    
+    print("=" * 80)
+    print(f"{'CONTAINER ID':<14} {'NAME':<30} {'STATUS':<15} {'LOG SIZE':<12}")
+    print("=" * 80)
+    
+    total_logs_size = 0
+    containers_data = []
+    
+    for container in containers:
+        container_id = container.get('ID', '')[:12]
+        container_name = container.get('Names', '')[:30]
+        status = container.get('State', '')[:15]
+        
+        # Get log size
+        log_size_bytes = get_container_logs_size(container_id)
+        
+        if log_size_bytes >= 0:
+            total_logs_size += log_size_bytes
+            log_size_formatted = format_size(log_size_bytes)
+            containers_data.append({
+                'id': container_id,
+                'name': container_name,
+                'size_bytes': log_size_bytes,
+                'size_formatted': log_size_formatted
+            })
+        else:
+            log_size_formatted = "ERROR"
+        
+        print(f"{container_id:<14} {container_name:<30} {status:<15} {log_size_formatted:<12}")
+    
+    # Print summary
+    print("=" * 80)
+    print(f"\nTotal logs size for all containers: {format_size(total_logs_size)}")
+    print(f"Number of containers: {len(containers)} (Running: {len([c for c in containers if c.get('State', '').startswith('running')])})")
+    
+    # Print top consumers if there are containers
+    if containers_data:
+        print("\nTop 5 containers by log size:")
+        print("-" * 50)
+        sorted_containers = sorted(containers_data, key=lambda x: x['size_bytes'], reverse=True)
+        for i, container in enumerate(sorted_containers[:5], 1):
+            print(f"{i}. {container['name']:<30} {container['size_formatted']:<12}")
+
+
+if __name__ == "__main__":
+    main()
