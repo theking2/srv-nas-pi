@@ -1,0 +1,24 @@
+services:
+  obfs4-bridge:
+    container_name: obfs4-bridge
+    image: thetorproject/obfs4-bridge:latest
+    restart: unless-stopped
+    logging:
+      options:
+        max-size: "100K"
+        max-file: "1"
+    cpus: 2
+    security_opt:
+      - no-new-privileges:true
+    read_only: false
+    stop_grace_period: 2m
+    volumes:
+      - /pool0/storage/compose/torrelay/torrc:/etc/tor/torrc:ro
+      - torrelay:/var/lib/tor  # Use existing volume
+    network_mode: host
+    entrypoint: ["tor", "-f", "/etc/tor/torrc"]
+
+volumes:
+  torrelay:
+    name: torrelay  # Reference existing volume
+    external: true  # Tell Docker this volume already exists
