@@ -1,0 +1,17 @@
+ContactInfo theking2@king.ma
+Address 188.155.240.245
+ORPort 9001 IPv4Only
+BandwidthRate 32 MBytes
+BandwidthBurst 64 MBytes
+MaxAdvertisedBandwidth 32 MBytes
+MaxMemInQueues 768 MB
+BridgeRelay 1
+ServerTransportPlugin obfs4 exec /usr/bin/obfs4proxy
+ServerTransportListenAddr obfs4 0.0.0.0:9002
+ExtORPort auto
+ExitRelay 0
+HardwareAccel 1
+RunAsDaemon 0
+SocksPort 0
+Log notice stdout
+DataDirectory /var/lib/tor
