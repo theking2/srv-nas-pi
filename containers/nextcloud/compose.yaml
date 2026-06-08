@@ -41,7 +41,10 @@ services:
     image: mariadb
     container_name: nextcloud-db
     restart: unless-stopped
-    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    command: >
+      --transaction-isolation=READ-COMMITTED
+      --binlog-format=ROW
+      --max_allowed_packet=256M
     networks:
       - backend  # Attach to backend network
     ports: [ "9306:3306" ]
@@ -65,7 +68,7 @@ services:
 
   redis:
     image: redis:alpine
-    container_name: redis
+    container_name: nextcloud-redis
     restart: unless-stopped
     logging:
       options:
@@ -74,4 +77,4 @@ services:
     networks:
       - backend  # Attach to backend network
     volumes:
-      - CHANGE_TO_COMPOSE_DATA_PATH/nextcloud/redis:/data  
+      - /pool0/storage/compose/nextcloud/redis:/data  
