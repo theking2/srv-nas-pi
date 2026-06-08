@@ -19,13 +19,14 @@ services:
       redis:
         condition: service_started
     networks:
-      - backend  # Attach to backend network
+      - backend
       - proxy
     volumes:
       - /pool0/storage/compose/nextcloud/custom_apps:/var/www/html/custom_apps
       - /pool0/storage/compose/nextcloud/config:/var/www/html/config
       - /pool0/storage/nextcloud_data:/var/www/html/data
       - /pool0/storage/compose/nextcloud/servername.conf:/etc/apache2/conf-enabled/servername.conf
+      - /pool0/storage/core_dumps:/core_dumps   # Optional: mount a host directory for core dumps
     environment:
       - TZ=Europe/Zurich
       - PUID=1000
@@ -35,6 +36,17 @@ services:
       - MYSQL_PASSWORD=dbpassword
       - MYSQL_HOST=nextclouddb
       - REDIS_HOST=redis
+    # Core dump settings
+    ulimits:
+      core:
+        hard: -1
+        soft: -1
+    security_opt:
+      - apparmor:unconfined   # or use: seccomp=unconfined
+    cap_add:
+      - SYS_PTRACE
+    # Optionally set core pattern inside container (requires entrypoint wrapper)
+    # Or set via sysctl at runtime on the host
 
   # Nextcloud's database
   nextclouddb:
