@@ -3,11 +3,16 @@ services:
     container_name: lms
     image: lmscommunity/lyrionmusicserver
     volumes:
-      - CHANGE_TO_COMPOSE_DATA_PATH/lms_config:/config:rw
-      - /pool0/archive/media/audio/music:/music:ro
-      - /pool0/archive/media/playlists:/playlist:rw
+#      - CHANGE_TO_COMPOSE_DATA_PATH/lms_config:/config:rw
+      - ${CONFIG}:/config:rw
+      - ${MEDIA}/audio/music:/music:ro
+      - ${MEDIA}/playlists:/playlist:rw
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     network_mode: host
     environment: [ HTTP_PORT=9000 ]
     restart: always
+    logging:
+      options:
+        max-size: "100K"
+        max-file: "1"

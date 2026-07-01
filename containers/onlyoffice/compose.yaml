@@ -18,7 +18,7 @@ services:
     environment:
       # JWT Security - Generate a strong random string
       - JWT_ENABLED=true
-      - JWT_SECRET=${JWT_SECRET}
+      - JWT_SECRET=${JWT_SECRET:-your-super-strong-secret-key-change-this}
       - JWT_HEADER=Authorization
       
       # Critical for OMV/Nextcloud integration (allows private IP communication)

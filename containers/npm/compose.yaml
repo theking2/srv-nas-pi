@@ -2,13 +2,18 @@
 networks:
   proxy:
     external: true
+  #mcvlan-eth1:
+  #  external: true
 
 services:
   nginx-proxy:
     container_name: nginx-proxy
     image: 'jc21/nginx-proxy-manager:latest'
     restart: unless-stopped
-    networks: [ proxy ]
+    cpus: 0.5 # cap at half a core max
+    networks:
+      - proxy
+    
     environment:
       - PUID=1000
       - PGID=1000

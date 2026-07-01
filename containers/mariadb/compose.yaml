@@ -6,5 +6,5 @@ services:
     restart: always
     image: mariadb:11
     environment: [ MYSQL_ROOT_PASSWORD=geheim ]
-    volumes: [ ./mariadb_data:/var/lib/mysql:rw ]
-    network_mode: host
+    volumes: [ CHANGE_TO_COMPOSE_DATA_PATH/mariadb_data:/var/lib/mysql:rw ]
+    network_mode: host 

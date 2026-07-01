@@ -11,3 +11,14 @@ services:
     ports: [ "3000:3000", "3001:3001" ]
     networks: [ proxy ]
     restart: unless-stopped
+    logging:
+      options:
+        max-size: "10K"
+        max-file: "1"
+    deploy:
+      resources:
+        limits:
+          memory: 32M
+        reservations:
+          memory: 8M
+    

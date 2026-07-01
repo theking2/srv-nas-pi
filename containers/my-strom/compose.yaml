@@ -2,11 +2,16 @@
 networks:
   web:
     driver: bridge
+  #mcvlan-eth1:
+  #  external: true
 services:
   webserver:
     container_name: my-strom
     image: trafex/php-nginx
-    networks: [ web ]
+    networks:
+      web:
+      # mcvlan-eth1:
+      #  ipv4_address: 192.168.0.12
     ports: [ "8888:8080" ]
-    volumes: [ ./htdocs:/var/www/html ]
+    volumes: [ CHANGE_TO_COMPOSE_DATA_PATH/my-strom_htdocs:/var/www/html ]
     restart: always

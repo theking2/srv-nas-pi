@@ -1,7 +1,7 @@
 name: transmission
-# networks:
-#     default:
-#         name: transmission
+networks:
+    default:
+        name: transmission
 services:
   transmission:
     image: lscr.io/linuxserver/transmission:latest
@@ -17,11 +17,10 @@ services:
       - PEERPORT= #optional
       - HOST_WHITELIST= #optional
     volumes:
-      - CHANGE_TO_COMPOSE_DATA_PATH/data:/config
-      - CHANGE_TO_COMPOSE_DATA_PATH/downloads:/downloads #optional
-      - CHANGE_TO_COMPOSE_DATA_PATH/watch:/watch #optional
+      - CHANGE_TO_COMPOSE_DATA_PATH/transmission/config:/config
+      - /pool0/archive/media/downloads:/downloads #optional
+      - CHANGE_TO_COMPOSE_DATA_PATH/transmission/watch:/watch #optional
     ports:
       - 192.168.111.11:9999:9091
-      - 192.168.1.20:57558:51413
-      - 192.168.1.20:57558:51413/udp
+      - 192.168.0.11:51413:51413
     restart: unless-stopped

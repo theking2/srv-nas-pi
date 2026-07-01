@@ -1,5 +1,8 @@
 # ONLYOFFICE — Document Server
 
+Name: Docserver
+Description: OnlyOffice
+
 Linked with Nextcloud server on https://cloud.king.ma. 
 
 ## Config

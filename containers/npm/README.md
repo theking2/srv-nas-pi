@@ -1,6 +1,7 @@
 # NPM Nginx Proxy Manager
 
-Docker name: nginx-proxy
+Name: npm
+Description: nginx proxy manager
 
 ## logs
 

@@ -1,3 +1,8 @@
+volumes:
+  torrelay_data:
+    external: true
+    name: torrelay
+
 services:
 
   torrelay:
@@ -5,16 +10,16 @@ services:
     build: torrelay
     image: torrelay
     restart: unless-stopped
+    logging:
+      options:
+        max-size: "100K"
+        max-file: "1"    
     cpus: 2
     security_opt:
       - no-new-privileges:true
     read_only: true
     stop_grace_period: 2m
     volumes:
-      - CHANGE_TO_COMPOSE_DATA_PATH/torrelay/torrc:/etc/tor/torrc:ro
-      - data:/var/lib/tor
+      - /pool0/storage/compose/torrelay/torrc:/etc/tor/torrc:ro
+      - torrelay_data:/var/lib/tor
     network_mode: host # check if you want this
-
-volumes:
-  data:
-    name: torrelay
