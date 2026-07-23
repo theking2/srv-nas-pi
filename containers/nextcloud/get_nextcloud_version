@@ -43,7 +43,7 @@ echo "
 #### Nextcloud
 
 \`\`\`
-$(tail -n 4 /pool0/storage/nextcloud_data/nextcloud.log)
+$(tail --lines=1 /pool0/storage/nextcloud_data/nextcloud.log)
 \`\`\`
 
 #### Web Browser
