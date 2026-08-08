@@ -50,6 +50,6 @@ $(tail --lines=1 /pool0/storage/nextcloud_data/nextcloud.log)
 
 #### Apps
 
-$(docker exec -it nextcloud /var/www/html/occ app:list | sed 's/^/> /')
+$(docker exec nextcloud /var/www/html/occ app:list | sed 's/^/> /')
 
 " 
