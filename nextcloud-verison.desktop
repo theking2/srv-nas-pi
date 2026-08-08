@@ -3,7 +3,7 @@
 Type=Application
 Name=Nextcloud Version Copy
 Comment=SSH into NAS, get Nextcloud version info, copy to clipboard
-Exec=sh -c "ssh admin@srv-nas-pi.kingma sudo ./get_nextcloud_version | xclip -selection clipboard"
+Exec=sh -c "ssh admin@srv-nas-pi.kingma sudo ./get_nextcloud_version | wl-copy"
 Icon=utilities-terminal
 Terminal=false
 Categories=Utility;
