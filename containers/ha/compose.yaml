@@ -12,6 +12,7 @@ services:
       - TZ=Etc/UTC
     volumes:
       - CHANGE_TO_COMPOSE_DATA_PATH/homeassistant:/config
+      - /run/dbus:/run/dbus:ro # host BlueZ for Bluetooth, see BLUETOOTH.md
     ports:
       - 8123:8123 #optional
     # devices:
