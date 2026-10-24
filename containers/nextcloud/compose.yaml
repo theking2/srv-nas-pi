@@ -5,6 +5,9 @@ networks:
   proxy:
     external: true
 
+volumes:
+  nextcloud:
+
 services:
   # Nextcloud server, reachable only over nginx-proxy
   nextcloud:
@@ -22,6 +25,7 @@ services:
       - backend
       - proxy
     volumes:
+      - nextcloud:/var/www/html
       - /pool0/storage/compose/nextcloud/custom_apps:/var/www/html/custom_apps
       - /pool0/storage/compose/nextcloud/config:/var/www/html/config
       - /pool0/storage/nextcloud_data:/var/www/html/data
@@ -37,11 +41,7 @@ services:
       - MYSQL_PASSWORD=dbpassword
       - MYSQL_HOST=nextclouddb
       - REDIS_HOST=redis
-    # Core dump settings
-    ulimits:
-      core:
-        hard: -1
-        soft: -1
+
     security_opt:
       - apparmor:unconfined   # or use: seccomp=unconfined
     cap_add:
