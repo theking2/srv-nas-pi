@@ -30,27 +30,43 @@ Automatic renewal of the OpenMediaVault (OMV) web UI TLS certificate issued by a
 
 ## Setup
 
-1. Look up the UUID of the OMV certificate entry:
+1. Look up the UUID of the certificate the OMV web UI uses (`sslcertificateref`). This must be the certificate that is actually assigned to the web UI, otherwise the renewed files are installed but never served:
 
    ```bash
-   omv-confdbadm read conf.system.certificate.ssl
+   sudo omv-confdbadm read conf.webadmin | grep -i sslcertificateref
    ```
 
-2. Set `CERT_UUID` in `omv-install-step-cert.sh` to that value.
+   All certificate entries, for reference:
 
-3. Install the files:
+   ```bash
+   sudo omv-confdbadm read conf.system.certificate.ssl
+   ```
+
+2. Set `CERT_UUID` in `omv-install-step-cert.sh` to that value (and update the comment above it).
+
+3. Restrict the step directory and the private key to root:
+
+   ```bash
+   sudo chown root:root /etc/step/certs/srv-nas-pi.key
+   sudo chmod 600 /etc/step/certs/srv-nas-pi.key
+   sudo chmod 700 /etc/step/certs
+   ```
+
+4. Install the files:
 
    ```bash
    sudo install -m 0755 omv-install-step-cert.sh /usr/local/sbin/omv-install-step-cert.sh
    sudo install -m 0644 omv-cert-renew.service omv-cert-renew.timer /etc/systemd/system/
    ```
 
-4. Enable the timer:
+5. Enable the timer:
 
    ```bash
    sudo systemctl daemon-reload
    sudo systemctl enable --now omv-cert-renew.timer
    ```
+
+6. Test the full path once (see [Testing the renewal path](#testing-the-renewal-path)). Until then only the skip branch has been exercised.
 
 ## Adapting to another host
 
@@ -76,16 +92,53 @@ Run a renewal check manually:
 sudo systemctl start omv-cert-renew.service
 ```
 
-If the certificate is not yet due, the service is skipped by `ExecCondition`. To force the renewal and install path, run the commands from the service file by hand with the same `STEPPATH=/etc/step`.
+If the certificate is not yet due, the service is skipped by `ExecCondition` and the journal shows `certificate does not need renewal`. This is the normal state most of the time.
 
 Inspect the active certificate:
 
 ```bash
-step certificate inspect /etc/step/certs/srv-nas-pi.crt --short
+sudo step certificate inspect /etc/step/certs/srv-nas-pi.crt --short
+```
+
+## Testing the renewal path
+
+Force a renewal and install without waiting for the threshold:
+
+```bash
+sudo STEPPATH=/etc/step step ca renew --force \
+  --ca-url https://ca.kingma:9000 \
+  --root /etc/step/root_ca.crt \
+  /etc/step/certs/srv-nas-pi.crt /etc/step/certs/srv-nas-pi.key
+sudo /usr/local/sbin/omv-install-step-cert.sh
+```
+
+Then check each stage. Use `sudo` for `ls`, and name the key file explicitly: `/etc/ssl/private` is not readable for normal users, so a `*` glob is expanded by your shell before `sudo` runs and finds nothing.
+
+```bash
+# 1. renewed source certificate (new validity dates)
+sudo step certificate inspect /etc/step/certs/srv-nas-pi.crt --short
+
+# 2. key permissions still 600
+sudo ls -l /etc/step/certs/srv-nas-pi.key
+
+# 3. installed copies (use your CERT_UUID)
+sudo ls -l /etc/ssl/certs/openmediavault-<UUID>.crt /etc/ssl/private/openmediavault-<UUID>.key
+
+# 4. what the web server actually serves
+echo | openssl s_client -connect localhost:443 -servername <hostname> 2>/dev/null \
+  | openssl x509 -noout -serial -dates
+```
+
+The serial and dates in step 4 must match step 1. If they do not, nginx is not serving the installed certificate. Likely reasons: `CERT_UUID` differs from `sslcertificateref` in `conf.webadmin`, another process (for example a container proxy) listens on the port, or the `ssl_certificate` path in the nginx configuration points elsewhere:
+
+```bash
+sudo ss -tlnp | grep -E ':(80|443)\b'
+sudo grep -rn ssl_certificate /etc/nginx/openmediavault-webgui.d/ /etc/nginx/conf.d/ /etc/nginx/sites-enabled/
 ```
 
 ## Notes
 
 - `step certificate needs-renewal` uses its default threshold (about two thirds of the certificate lifetime elapsed). Add `--expires-in <duration>` or a percentage to the `ExecCondition` to change it.
 - `step ca renew` authenticates with the current, still valid certificate. If the certificate has already expired, it must be re-issued with `step ca certificate` instead.
-- The private key is copied into OMV's key directory with mode `0600`. Keep `/etc/step/certs` restricted to root.
+- The private key is copied into OMV's key directory with mode `0600`. Keep `/etc/step/certs` (mode `0700`) and the source key (mode `0600`) restricted to root.
+- The root CA certificate is read from `/etc/step/root_ca.crt` (the path in the service file). A second copy in `/etc/step/certs/` is not used.
