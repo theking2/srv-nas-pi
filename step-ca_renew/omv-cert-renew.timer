@@ -1,0 +1,11 @@
+[Unit]
+Description=Check OMV step-ca certificate renewal
+
+[Timer]
+OnCalendar=*-*-* *:00/15:00
+RandomizedDelaySec=5m
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+~

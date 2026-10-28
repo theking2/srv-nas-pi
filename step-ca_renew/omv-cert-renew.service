@@ -1,0 +1,15 @@
+[Unit]
+Description=Renew OMV TLS certificate from step-ca
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+Environment=STEPPATH=/etc/step
+ExecCondition=/usr/local/bin/step certificate needs-renewal /etc/step/certs/srv-nas-pi.crt
+ExecStart=/usr/local/bin/step ca renew --force \
+  --ca-url https://ca.kingma:9000 \
+  --root /etc/step/root_ca.crt \
+  /etc/step/certs/srv-nas-pi.crt \
+  /etc/step/certs/srv-nas-pi.key
+ExecStartPost=/usr/local/sbin/omv-install-step-cert.sh
