@@ -28,15 +28,17 @@ Open Mediavault installed
 ## zpool list
 
       NAME    SIZE  ALLOC   FREE  CKPOINT  EXPANDSZ   FRAG    CAP  DEDUP    HEALTH  ALTROOT
-      pool0  14.5T  3.45T  11.1T        -         -     1%    23%  1.00x    ONLINE  -
+      pool0  14.5T  4.46T  10.1T        -         -    18%    30%  1.08x    ONLINE  -
 
 ## zfs list
 
       NAME            USED  AVAIL  REFER  MOUNTPOINT
-      pool0          2.58T  8.18T  35.9K  /pool0
-      pool0/archive  2.17T  8.18T  2.07T  /pool0/archive
-      pool0/main     4.77G  5.23G  3.51G  /pool0/main
-      pool0/storage   415G   385G   407G  /pool0/storage
+      pool0          3.35T  7.42T  35.9K  /pool0
+      pool0/archive  3.19T  1.44T  3.06T  /pool0/archive
+      pool0/main     90.2G  59.8G  13.5G  /pool0/main
+      pool0/storage  69.4G   553G  46.9G  /pool0/storage
+      pool0/swap     4.18G  7.42T  2.55G  -
+
 
 ## Shares
 
