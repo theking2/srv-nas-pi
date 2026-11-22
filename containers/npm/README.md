@@ -11,8 +11,8 @@ ssh -t srv-nas-pi "sudo docker container logs nginx-proxy --follow"
 
 ## config
 
-- data is in `/pool0/main/compose/appdata/npm/data`
-- letsencrypt in `/pool0/main/compose/appdata/npm/letsencrypt`
+- data is in `/pool0/storage/compose/npm/data`
+- letsencrypt in `/pool0/storage/compose/npm/letsencrypt`
 
 ## Proxy Hosts
 
