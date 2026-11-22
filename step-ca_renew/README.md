@@ -27,6 +27,7 @@ Automatic renewal of the OpenMediaVault (OMV) web UI TLS certificate issued by a
 - An initial certificate and key already issued by the CA at `/etc/step/certs/srv-nas-pi.crt` / `srv-nas-pi.key` (`step ca renew` renews an existing certificate, it does not create the first one)
 - The CA reachable at `https://ca.kingma:9000` from the host
 - A certificate entry in OMV (System > Certificates > SSL) selected for the web UI
+- The OMV web UI listens on HTTPS port `8443` (System > Workbench). Port `443` on the LAN address belongs to NPM, which serves its own certificates, see [`containers/npm`](../containers/npm/README.md)
 
 ## Setup
 
@@ -125,14 +126,14 @@ sudo ls -l /etc/step/certs/srv-nas-pi.key
 sudo ls -l /etc/ssl/certs/openmediavault-<UUID>.crt /etc/ssl/private/openmediavault-<UUID>.key
 
 # 4. what the web server actually serves
-echo | openssl s_client -connect localhost:443 -servername <hostname> 2>/dev/null \
+echo | openssl s_client -connect localhost:8443 -servername <hostname> 2>/dev/null \
   | openssl x509 -noout -serial -dates
 ```
 
-The serial and dates in step 4 must match step 1. If they do not, nginx is not serving the installed certificate. Likely reasons: `CERT_UUID` differs from `sslcertificateref` in `conf.webadmin`, another process (for example a container proxy) listens on the port, or the `ssl_certificate` path in the nginx configuration points elsewhere:
+The serial and dates in step 4 must match step 1. If they do not, nginx is not serving the installed certificate. Likely reasons: `CERT_UUID` differs from `sslcertificateref` in `conf.webadmin`, the connection goes to the wrong port (443 is NPM, OMV is on 8443), or the `ssl_certificate` path in the nginx configuration points elsewhere:
 
 ```bash
-sudo ss -tlnp | grep -E ':(80|443)\b'
+sudo ss -tlnp | grep -E ':(80|443|8443)\b'
 sudo grep -rn ssl_certificate /etc/nginx/openmediavault-webgui.d/ /etc/nginx/conf.d/ /etc/nginx/sites-enabled/
 ```
 

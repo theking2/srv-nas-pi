@@ -23,7 +23,7 @@ Switch on `Cron (Recommended)` in nextcloud admin Basic settings. Create a cron 
 ```
 
 > [!TIP]
-> These are currently executed in the OMV [System Scheduled tasks](https://srv-nas-pi.kingma/#/system/cron) and not active in bare cron.
+> These are currently executed in the OMV [System Scheduled tasks](https://srv-nas-pi.kingma:8443/#/system/cron) and not active in bare cron.
 
 ## maintenance
 

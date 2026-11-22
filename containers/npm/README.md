@@ -47,7 +47,9 @@ step ca certificate npm.kingma npm.crt npm.key \
 3. Proxy Host for the admin UI: domain `npm.kingma`, scheme `http`, forward `192.168.111.11` port `81`, Websockets Support on
 4. SSL tab: select the certificate, Force SSL
 
-The TLS port is the published `9443` (see `compose.yaml`), so the admin UI is reached at `https://npm.kingma:9443`. Port 81 stays plain HTTP.
+On the LAN NPM publishes the standard TLS port `443` (`192.168.111.11:443`, see `compose.yaml`), so the admin UI is reached at `https://npm.kingma`. Port 81 stays plain HTTP. The OMV web UI no longer uses 443, it moved to `8443`.
+
+The DMZ side (`192.168.0.11`) is unchanged: the router forwards WAN 443 to `9443` and WAN 80 to `9080`, so these two ports stay non-standard there. There is no route between the two networks (see below).
 
 The root CA must be in the client trust store (`/etc/step/root_ca.crt` on the server; for Arch/Fedora based clients copy it to the p11-kit anchors and run `sudo update-ca-trust`).
 
@@ -170,10 +172,10 @@ The unit file is installed once, per-host work is only the `enable` line.
 getent hosts <name>.kingma
 
 # TLS chain is trusted (root CA in the client trust store) and the backend answers
-curl -I https://<name>.kingma:9443
+curl -I https://<name>.kingma
 
 # certificate served by NPM: subject, issuer, dates
-echo | openssl s_client -connect <name>.kingma:9443 -servername <name>.kingma 2>/dev/null \
+echo | openssl s_client -connect <name>.kingma:443 -servername <name>.kingma 2>/dev/null \
   | openssl x509 -noout -subject -issuer -dates
 
 # renewal path: forces one renewal and reloads nginx
@@ -184,4 +186,4 @@ sudo /usr/local/bin/step ca renew --force \
   /pool0/storage/compose/npm/data/custom_ssl/npm-<id>/privkey.pem
 ```
 
-After the forced renewal, "Valid from" in the `openssl s_client` output must show the current time. If `curl` reports a certificate problem, the root CA is missing in the client trust store. If it cannot connect, check the DNS record and that port `9443` is reachable.
+After the forced renewal, "Valid from" in the `openssl s_client` output must show the current time. If `curl` reports a certificate problem, the root CA is missing in the client trust store. If it cannot connect, check the DNS record and that port `443` on `192.168.111.11` is reachable (`sudo ss -tlnp | grep ':443 '` on srv-nas-pi must show `docker-proxy`, not nginx of OMV).

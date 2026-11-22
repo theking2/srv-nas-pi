@@ -77,6 +77,21 @@ Port | forwared | What
 3000 | 192.168.0.11:3000 | open speedtest
 
 
+## Ports on srv-nas-pi
+
+NPM runs in Docker and owns the standard ports on the LAN. The OMV web UI was moved off 443 to 8443. On the DMZ side NPM keeps the non-standard ports, because the router forwards to them (see above).
+
+| Network | Address | Port | Service |
+|---------|---------|------|---------|
+| LAN | `192.168.111.11` | 80 | NPM, http → https redirect |
+| LAN | `192.168.111.11` | 443 | NPM, https (e.g. `https://npm.kingma`) |
+| LAN | `192.168.111.11` | 81 | NPM admin (http, via proxy host `npm.kingma`) |
+| LAN | `192.168.111.11` | 8443 | OMV web UI (`https://srv-nas-pi.kingma:8443`) |
+| DMZ | `192.168.0.11` | 9080 | NPM, WAN 80 forward |
+| DMZ | `192.168.0.11` | 9443 | NPM, WAN 443 forward |
+
+The published ports are defined in `containers/npm/compose.yaml`. The OMV port is set in System > Workbench.
+
 ## pool0 – tree
 
 ```
