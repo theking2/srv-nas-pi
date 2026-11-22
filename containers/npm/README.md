@@ -94,11 +94,18 @@ Example: a new service `<name>.kingma` that NPM proxies over TLS with a certific
 
 #### 1. DNS entry
 
-On the local nameserver (net-ns) add an A record that points the new name to srv-nas-pi, the host that runs NPM:
+The local nameserver is `net-ns` (`192.168.111.2`, dnsmasq, domain `kingma`, also the DHCP server for `192.168.111.0/26`). Add a record on it that points the new name to srv-nas-pi, the host that runs NPM:
 
-| Name | Type | Value |
-|------|------|-------|
-| `<name>.kingma` | A | `192.168.111.11` |
+```sh
+# /etc/dnsmasq.conf on net-ns
+host-record=<name>.kingma,192.168.111.11
+```
+
+```sh
+sudo systemctl restart dnsmasq    # a SIGHUP does not re-read dnsmasq.conf
+```
+
+`/etc/dnsmasq.hosts.conf` is the DHCP hosts file (MAC, name, IP) and is not the place for this record. `host-record` also works for names that are not DHCP clients.
 
 srv-nas-pi has two NICs in two networks with separate ISPs:
 
@@ -112,7 +119,8 @@ There is no route between the two networks, so local clients must resolve names 
 Check from a client:
 
 ```sh
-getent hosts <name>.kingma    # must print 192.168.111.11
+dig +short @192.168.111.2 <name>.kingma    # must print 192.168.111.11
+getent hosts <name>.kingma                 # same result through the client's resolver
 ```
 
 #### 2. Certificate
