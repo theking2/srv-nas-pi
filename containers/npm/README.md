@@ -98,14 +98,14 @@ On the local nameserver (net-ns) add an A record that points the new name to srv
 
 | Name | Type | Value |
 |------|------|-------|
-| `<name>.kingma` | A | `192.168.0.11` |
+| `<name>.kingma` | A | `192.168.111.11` |
 
-`192.168.0.11` is the address NPM publishes its TLS port on (see `compose.yaml`). The name points to NPM, not to the backend: NPM forwards to the real backend address in step 3.
+`192.168.111.11` is the address of srv-nas-pi in the local network (`192.168.111.0/24`). There is no route between `192.168.111.0/24` and `192.168.0.0/24`, so local clients must use this address, not `192.168.0.11` (the office/WAN side, used for the port forwards in the main README). The name points to NPM, not to the backend: NPM forwards to the real backend address in step 3.
 
 Check from a client:
 
 ```sh
-getent hosts <name>.kingma    # must print 192.168.0.11
+getent hosts <name>.kingma    # must print 192.168.111.11
 ```
 
 #### 2. Certificate
