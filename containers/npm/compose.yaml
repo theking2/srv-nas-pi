@@ -2,8 +2,6 @@
 networks:
   proxy:
     external: true
-  #mcvlan-eth1:
-  #  external: true
 
 services:
   nginx-proxy:
@@ -20,8 +18,8 @@ services:
     ports:
       - '192.168.0.11:9080:80' # for Let-s encrypt renewal
 #      - '192.168.0.11:9443:443' # proxied
-      - '9443:443' # proxied, on all interfaces (DMZ 192.168.0.11 and internal 192.168.111.11)
+      - '9443:443' # proxied
       - '192.168.111.11:81:81'
     volumes:
-      - CHANGE_TO_COMPOSE_DATA_PATH/npm/data:/data
-      - CHANGE_TO_COMPOSE_DATA_PATH/npm/letsencrypt:/etc/letsencrypt
+      - /pool0/storage/compose/npm/data:/data
+      - /pool0/storage/compose/npm/letsencrypt:/etc/letsencrypt
