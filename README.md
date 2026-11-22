@@ -59,7 +59,7 @@ IP | what | notes
 -|-|-
 192.168.0.1 | LAN | ISP1 router
 192.168.0.11 | srv-nas-pi | via Renkforce USB
-xxx.xxx.xxx.xxx | WAN | https://*.kingma.ch and https://*.king.ma all proxied through npm
+xxx.xxx.xxx.xxx | WAN | https://\*.kingma.ch and https://\*.king.ma all proxied through npm
 
 ## Nameserver
 
