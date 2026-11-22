@@ -1,0 +1,18 @@
+[Unit]
+Description=Renew step-ca certificate npm-%i for Nginx Proxy Manager
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/step ca renew --daemon --force \
+  --ca-url https://ca.kingma:9000 \
+  --root /etc/step/root_ca.crt \
+  --exec "/usr/bin/docker exec nginx-proxy nginx -s reload" \
+  /pool0/storage/compose/npm/data/custom_ssl/npm-%i/fullchain.pem \
+  /pool0/storage/compose/npm/data/custom_ssl/npm-%i/privkey.pem
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
