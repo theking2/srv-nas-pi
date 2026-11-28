@@ -182,3 +182,12 @@ mkswap /dev/zvol/pool0/swap
 sudo systemctl disable dphys-swapfile
 ```
 
+
+## Maintenance log
+
+2026-11-28, found by the new Icinga checks:
+
+- Removed the orphaned remote mount `srv-remotemount-ws_white_E.mount` (`//ws-white/E$`). The workstation was retired (its replacement has the same name), and the Remote Mount plugin list was already empty, but the systemd unit was still enabled and failed on every boot. Also removed: its `remote-fs.target.wants` link and the dangling one of the older `wswhite_E` mount, the entry in `docker.service.d/waitAllMounts.conf`, the CIFS credentials file in `/root` and the empty folders under `/srv/remotemount`. Backup of the unit and drop-in: `/root/backup-remotemount-20261128-143539.tar.gz`. A new mount to ws-white belongs in Storage > Remote Mount, so OMV manages it.
+- Disabled `clamav-freshclam-once.timer`. It clashed with the running `clamav-freshclam.service` daemon over the log lock and failed nightly; the daemon keeps the database up to date.
+- `/etc/sudoers.d/debian_frontend` set to mode 0440. With 0644 sudo ignored the file, so `env_keep += DEBIAN_FRONTEND` is now in effect.
+- Still open: the OMV rsync job to `Johannes@ws-white/e$` now points at the new workstation; check account, share and SSH key there.
