@@ -1,0 +1,34 @@
+#!/bin/bash
+# check_pi_health - Raspberry Pi SoC temperature and throttling
+# Usage: check_pi_health [-w temp] [-c temp]
+# Temperature from sysfs (no root); throttling via sudo vcgencmd (see /etc/sudoers.d/icinga).
+WARN=70 CRIT=80
+while getopts "w:c:" o; do
+  case $o in w) WARN=$OPTARG;; c) CRIT=$OPTARG;; *) echo "UNKNOWN - bad option"; exit 3;; esac
+done
+raw=$(cat /sys/class/thermal/thermal_zone0/temp 2>/dev/null) || { echo "UNKNOWN - no thermal zone"; exit 3; }
+temp=$(awk -v t="$raw" 'BEGIN{printf "%.1f", t/1000}')
+ti=${raw%???}
+
+rc=0 notes=()
+if   (( ti >= CRIT )); then rc=2
+elif (( ti >= WARN )); then rc=1; fi
+
+thr=$(sudo -n /usr/bin/vcgencmd get_throttled 2>/dev/null | sed 's/throttled=//')
+if [ -n "$thr" ]; then
+  v=$((thr))
+  (( v & 0x1 ))     && { rc=2; notes+=("under-voltage now"); }
+  (( v & 0x4 ))     && { rc=2; notes+=("throttled now"); }
+  (( v & 0x8 ))     && { (( rc < 1 )) && rc=1; notes+=("soft temp limit now"); }
+  (( v & 0x2 ))     && { (( rc < 1 )) && rc=1; notes+=("arm freq capped now"); }
+  (( v & 0x10000 )) && notes+=("under-voltage since boot")
+  (( v & 0x40000 )) && notes+=("throttled since boot")
+else
+  thr="n/a"
+fi
+
+label=(OK WARNING CRITICAL UNKNOWN)
+msg="${label[$rc]} - SoC ${temp}C, throttled=$thr"
+(( ${#notes[@]} )) && msg+=" ($(IFS=';'; echo "${notes[*]}"))"
+echo "$msg | soc_temp=${temp};$WARN;$CRIT"
+exit $rc

@@ -1,0 +1,42 @@
+#!/bin/bash
+# check_smart_disk - SMART health and temperature of one disk
+# Usage: check_smart_disk -D /dev/disk/by-id/<id> [-d sat|usbsunplus|...] [-w temp] [-c temp]
+# Runs smartctl through sudo (see /etc/sudoers.d/icinga).
+DEV="" TYPE="auto" WARN=55 CRIT=65
+while getopts "D:d:w:c:" o; do
+  case $o in D) DEV=$OPTARG;; d) TYPE=$OPTARG;; w) WARN=$OPTARG;; c) CRIT=$OPTARG;; *) echo "UNKNOWN - bad option"; exit 3;; esac
+done
+[ -n "$DEV" ] || { echo "UNKNOWN - -D device required"; exit 3; }
+
+out=$(sudo -n /usr/sbin/smartctl -H -A -d "$TYPE" "$DEV" 2>&1); src=$?
+
+# smartctl exit status is a bit mask (man smartctl, RETURN VALUES)
+if (( src & 7 )); then echo "UNKNOWN - smartctl failed (rc=$src): $(echo "$out" | tail -1)"; exit 3; fi
+rc=0 notes=()
+(( src & 8 ))   && { rc=2; notes+=("DISK FAILING"); }
+(( src & 16 ))  && { rc=2; notes+=("prefail attribute below threshold"); }
+(( src & 32 ))  && notes+=("attribute below threshold in the past")
+(( src & 64 ))  && { (( rc < 1 )) && rc=1; notes+=("errors in error log"); }
+(( src & 128 )) && { (( rc < 1 )) && rc=1; notes+=("self-test errors"); }
+
+health=$(echo "$out" | sed -n -E 's/.*(self-assessment test result|Health Status): *//p' | head -1)
+
+# temperature: attribute 194, else 190, else SCSI "Current Drive Temperature"
+temp=$(echo "$out" | awk '$1==194{print $10; exit}')
+[ -n "$temp" ] || temp=$(echo "$out" | awk '$1==190{print $10; exit}')
+[ -n "$temp" ] || temp=$(echo "$out" | sed -n -E 's/^Current Drive Temperature: *([0-9]+).*/\1/p')
+realloc=$(echo "$out" | awk '$1==5{print $10; exit}')
+
+perf=""
+if [ -n "$temp" ]; then
+  perf+="temp=${temp};$WARN;$CRIT "
+  if   (( temp >= CRIT )); then rc=2; notes+=("temperature ${temp}C");
+  elif (( temp >= WARN )); then (( rc < 1 )) && rc=1; notes+=("temperature ${temp}C"); fi
+fi
+[ -n "$realloc" ] && perf+="reallocated=${realloc};;;0 "
+
+label=(OK WARNING CRITICAL UNKNOWN)
+msg="${label[$rc]} - $(basename "$DEV"): ${health:-unknown}${temp:+, ${temp}C}"
+(( ${#notes[@]} )) && msg+=" ($(IFS=';'; echo "${notes[*]}"))"
+echo "$msg | $perf"
+exit $rc

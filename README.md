@@ -1,6 +1,6 @@
 # srv-nas-pi
 
-Is a home server project that was build with Pi5, Radxa Penta PCI board, 4 2TB SSDs, a USB-Ethernet adaptor. Software Open Media Vault with Plugins ZFS and Compose. As container Lyrion Music Server, OpenSpeedTest, Nextcloud, Collabora and a small home webserver for the local IoT appliances. Backups are on the eSATAx connected HDD and a standby TrueNAS. A seconds Pi5 Based OMV with virtually the same setup is used for lab tests.
+Is a home server project that was build with Pi5, Radxa Penta PCI board, 4 4TB SSDs (WD Red SA500), a USB-Ethernet adaptor. Software Open Media Vault with Plugins ZFS and Compose. As container Lyrion Music Server, OpenSpeedTest, Nextcloud, Collabora and a small home webserver for the local IoT appliances. Backups are on the eSATAx connected HDD and a standby TrueNAS. A seconds Pi5 Based OMV with virtually the same setup is used for lab tests.
 
 ## PI5
 
@@ -24,6 +24,10 @@ Needed for:
 
 
 Open Mediavault installed
+
+## Monitoring
+
+Icinga agent, monitored from srv-monitor: see [`icinga/`](icinga/README.md).
 
 ## zpool list
 
