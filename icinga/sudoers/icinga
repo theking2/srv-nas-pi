@@ -1,0 +1,11 @@
+# /etc/sudoers.d/icinga - read-only rights for the Icinga agent (user nagios)
+# Install: sudo install -m 440 icinga /etc/sudoers.d/icinga && sudo visudo -c
+Cmnd_Alias ICINGA_SMART = \
+  /usr/sbin/smartctl -H -A -d sat /dev/disk/by-id/ata-WD_Red_SA500_2.5_4TB_2446BMD00017, \
+  /usr/sbin/smartctl -H -A -d sat /dev/disk/by-id/ata-WD_Red_SA500_2.5_4TB_2446BMD00094, \
+  /usr/sbin/smartctl -H -A -d sat /dev/disk/by-id/ata-WD_Red_SA500_2.5_4TB_2446BMD00135, \
+  /usr/sbin/smartctl -H -A -d sat /dev/disk/by-id/ata-WD_Red_SA500_2.5_4TB_2446BMD00538, \
+  /usr/sbin/smartctl -H -A -d usbsunplus /dev/disk/by-id/usb-ST315003_41AS_00038d5d-0\:0
+Cmnd_Alias ICINGA_PI = /usr/bin/vcgencmd get_throttled
+Defaults:nagios !requiretty
+nagios ALL=(root) NOPASSWD: ICINGA_SMART, ICINGA_PI

@@ -1,0 +1,19 @@
+#!/bin/bash
+# check_memavail - available memory (MemAvailable) in percent of total
+# Usage: check_memavail [-w free%] [-c free%]
+# Note: ZFS ARC is counted as used by the kernel; it shrinks under pressure.
+WARN=10 CRIT=5
+while getopts "w:c:" o; do
+  case $o in w) WARN=$OPTARG;; c) CRIT=$OPTARG;; *) echo "UNKNOWN - bad option"; exit 3;; esac
+done
+read -r total avail < <(awk '/^MemTotal:/{t=$2} /^MemAvailable:/{a=$2} END{print t, a}' /proc/meminfo)
+[ -n "$avail" ] || { echo "UNKNOWN - MemAvailable missing"; exit 3; }
+pct=$(( avail * 100 / total ))
+arc=$(awk '$1=="size"{print int($3/1024)}' /proc/spl/kstat/zfs/arcstats 2>/dev/null)
+
+rc=0
+if   (( pct <= CRIT )); then rc=2
+elif (( pct <= WARN )); then rc=1; fi
+label=(OK WARNING CRITICAL UNKNOWN)
+echo "${label[$rc]} - $((avail/1024)) MiB available (${pct}%)${arc:+, ZFS ARC $((arc/1024)) MiB} | avail=${avail}KB;$((total*WARN/100));$((total*CRIT/100));0;$total avail_pct=${pct}%;$WARN;$CRIT;0;100${arc:+ arc=${arc}KB}"
+exit $rc

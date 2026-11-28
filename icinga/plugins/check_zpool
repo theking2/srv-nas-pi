@@ -1,0 +1,34 @@
+#!/bin/bash
+# check_zpool - health and capacity of all ZFS pools (or one with -p)
+# Usage: check_zpool [-p pool] [-w cap%] [-c cap%]
+# No root needed.
+WARN=80 CRIT=90 POOL=""
+while getopts "p:w:c:" o; do
+  case $o in p) POOL=$OPTARG;; w) WARN=$OPTARG;; c) CRIT=$OPTARG;; *) echo "UNKNOWN - bad option"; exit 3;; esac
+done
+command -v zpool >/dev/null || { echo "UNKNOWN - zpool not found"; exit 3; }
+out=$(zpool list -Hpo name,health,cap,size,alloc $POOL 2>&1) || { echo "UNKNOWN - $out"; exit 3; }
+[ -n "$out" ] || { echo "UNKNOWN - no pools"; exit 3; }
+
+rc=0 msg="" perf=""
+while read -r name health cap size alloc; do
+  state=0
+  if [ "$health" != "ONLINE" ]; then state=2
+  elif [ "$cap" -ge "$CRIT" ]; then state=2
+  elif [ "$cap" -ge "$WARN" ]; then state=1
+  fi
+  [ $state -gt $rc ] && rc=$state
+  msg+="$name $health ${cap}% used, "
+  perf+="'${name}_cap'=${cap}%;$WARN;$CRIT;0;100 '${name}_alloc'=${alloc}B;;;0;$size "
+done <<< "$out"
+
+# scrub/resilver errors and degraded vdevs show here even when pool is ONLINE
+status=$(zpool status -x $POOL 2>&1)
+case $status in
+  "all pools are healthy"|"pool '$POOL' is healthy") ;;
+  *) [ $rc -lt 1 ] && rc=1; msg+="zpool status: $(echo "$status" | grep -m1 -E 'status:|state:' | sed 's/^ *//'), " ;;
+esac
+
+label=(OK WARNING CRITICAL UNKNOWN)
+echo "${label[$rc]} - ${msg%, } | $perf"
+exit $rc
