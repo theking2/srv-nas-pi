@@ -15,5 +15,7 @@ rc=0
 if   (( pct <= CRIT )); then rc=2
 elif (( pct <= WARN )); then rc=1; fi
 label=(OK WARNING CRITICAL UNKNOWN)
-echo "${label[$rc]} - $((avail/1024)) MiB available (${pct}%)${arc:+, ZFS ARC $((arc/1024)) MiB} | avail=${avail}KB;$((total*WARN/100));$((total*CRIT/100));0;$total avail_pct=${pct}%;$WARN;$CRIT;0;100${arc:+ arc=${arc}KB}"
+# perfdata in bytes: /proc/meminfo counts KiB, and Icinga reads "KB" as 1000 bytes
+b=1024
+echo "${label[$rc]} - $((avail/1024)) MiB available (${pct}%)${arc:+, ZFS ARC $((arc/1024)) MiB} | avail=$((avail*b))B;$((total*b*WARN/100));$((total*b*CRIT/100));0;$((total*b)) avail_pct=${pct}%;$WARN;$CRIT;0;100${arc:+ arc=$((arc*b))B}"
 exit $rc
