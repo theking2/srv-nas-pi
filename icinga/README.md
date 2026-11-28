@@ -22,6 +22,7 @@ The Director objects (commands, templates, host and services) are created by [`i
 | `check_pi_health` | SoC temperature (warn 70, crit 80 °C), under-voltage and throttling | sudo `vcgencmd` |
 | `check_memavail` | `MemAvailable` (warn 10 %, crit 5 %), reports the ZFS ARC size | no |
 | `check_units` | given systemd units are active (crit), any failed unit (warn) | no |
+| `check_link` | interface up with carrier, speed, expected IPv4 address, gateway pinged through that interface (`ping -I`); warns once after a link flap or new rx/tx errors (state in `/var/lib/icinga2/check_link.<iface>`) | no |
 
 `check_smart_disk` reports "attribute below threshold in the past" as OK: it is history, not a current fault.
 
@@ -35,7 +36,11 @@ The Director objects (commands, templates, host and services) are created by [`i
 | `smart backup-hdd` | agent | Seagate ST31500341AS 1.5 TB backup HDD on USB/eSATA (`-d usbsunplus`, warn 50, crit 55 °C) |
 | `pi health` | agent | `check_pi_health` |
 | `systemd units` | agent | `openmediavault-engined`, `docker`, `smartmontools`, `zfs-zed`, `nginx`, `php8.4-fpm`, `ssh`, `nut-monitor`, `collectd`, `monit` |
+| `link eth0 LAN`, `link eth1 DMZ` | agent | `check_link` every minute: 1000 Mbit/s, `192.168.111.11` and `192.168.0.11`, gateways `192.168.111.30` and `192.168.0.1` |
 | `ping`, `ssh` | master | reachability |
+| `ping DMZ` | master | `192.168.0.11` from srv-monitor's own DMZ interface (`192.168.0.22`), so it tests the DMZ link without the router |
+| `web NPM DMZ` | master | NPM on the DMZ port `192.168.0.11:9443` (target of the WAN 443 forward) |
+| `wan office HTTPS` | master | `https://speed.kingma.ch` through its public address: srv-monitor routes out through the home ISP, so the request comes in through the office router's port forward, the DMZ link and NPM |
 | `web OMV`, `web NPM admin`, `web Nextcloud`, `web OnlyOffice`, `web Lyrion`, `web HomeAssistant`, `web Speedtest` | master | HTTP(S) against `192.168.111.11` with the virtual host name; Nextcloud must report `"maintenance":false` |
 | `cert <name>` (5×) | master | Let's Encrypt certificate of the public names, warn 21, crit 7 days before expiry |
 

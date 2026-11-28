@@ -1,0 +1,72 @@
+#!/bin/bash
+# check_link - state of one network interface and its gateway, pinged through that interface
+# Usage: check_link -i iface [-s min_speed_mbit] [-a expected_ipv4] [-g gateway] [-w rtt_ms,loss%] [-c rtt_ms,loss%]
+#   CRITICAL: interface down, no carrier, expected address missing, gateway unreachable (loss >= crit)
+#   WARNING:  speed below -s, carrier changed since the last run (link flap), rx/tx errors grew, gateway slow
+# Gateway default: the default route on that interface. No root needed (ping uses ICMP datagram sockets).
+# State for flap and error detection: /var/lib/icinga2/check_link.<iface>
+IF="" SPEED=0 ADDR="" GW="" WARN="50,10" CRIT="200,50"
+while getopts "i:s:a:g:w:c:" o; do
+  case $o in i) IF=$OPTARG;; s) SPEED=$OPTARG;; a) ADDR=$OPTARG;; g) GW=$OPTARG;; w) WARN=$OPTARG;; c) CRIT=$OPTARG;;
+    *) echo "UNKNOWN - bad option"; exit 3;; esac
+done
+[ -n "$IF" ] || { echo "UNKNOWN - -i interface required"; exit 3; }
+S=/sys/class/net/$IF
+[ -d "$S" ] || { echo "CRITICAL - interface $IF does not exist"; exit 2; }
+
+rd() { cat "$S/$1" 2>/dev/null; }
+oper=$(rd operstate) carrier=$(rd carrier) speed=$(rd speed)
+rxb=$(rd statistics/rx_bytes) txb=$(rd statistics/tx_bytes)
+rxe=$(rd statistics/rx_errors) txe=$(rd statistics/tx_errors) rxd=$(rd statistics/rx_dropped)
+cc=$(rd carrier_changes)
+IFS=, read -r wrtt wloss <<< "$WARN"; IFS=, read -r crtt closs <<< "$CRIT"
+
+rc=0 notes=()
+crit() { rc=2; notes+=("$1"); }
+warn() { (( rc < 1 )) && rc=1; notes+=("$1"); }
+
+[ "$oper" = up ] || crit "operstate $oper"
+[ "$carrier" = 1 ] || crit "no carrier"
+if [[ $speed =~ ^[0-9]+$ ]] && (( speed > 0 )); then
+  (( SPEED > 0 && speed < SPEED )) && warn "speed ${speed} Mbit/s < ${SPEED}"
+else speed=""; fi
+
+addrs=$(ip -4 -o addr show dev "$IF" 2>/dev/null | awk '{print $4}' | paste -sd, -)
+if [ -n "$ADDR" ]; then [[ ",$addrs," == *",$ADDR/"* ]] || crit "address $ADDR missing (has: ${addrs:-none})"
+else [ -n "$addrs" ] || crit "no IPv4 address"; fi
+
+# flap and error growth since the last run
+state=/var/lib/icinga2/check_link.$IF
+if [ -r "$state" ]; then
+  read -r pcc prxe ptxe < "$state"
+  (( cc > pcc )) && warn "link flapped ($((cc - pcc))x since last check)"
+  (( rxe + txe > prxe + ptxe )) && warn "$((rxe + txe - prxe - ptxe)) new rx/tx errors"
+fi
+echo "$cc $rxe $txe" > "$state" 2>/dev/null
+
+# gateway through this interface
+[ -n "$GW" ] || GW=$(ip -4 route show default dev "$IF" 2>/dev/null | awk '{print $3; exit}')
+perf_gw=""
+if [ -n "$GW" ] && [ "$carrier" = 1 ]; then
+  out=$(ping -I "$IF" -n -q -c 5 -i 0.2 -W 1 "$GW" 2>&1)
+  loss=$(echo "$out" | sed -n -E 's/.* ([0-9.]+)% packet loss.*/\1/p'); loss=${loss%.*}
+  rtt=$(echo "$out" | sed -n -E 's|.*= [0-9.]+/([0-9.]+)/.*|\1|p')
+  [ -n "$loss" ] || loss=100
+  if   (( loss >= closs )); then crit "gateway $GW ${loss}% loss"
+  elif (( loss >= wloss )); then warn "gateway $GW ${loss}% loss"; fi
+  if [ -n "$rtt" ]; then
+    r=${rtt%.*}
+    if   (( r >= crtt )); then crit "gateway $GW rtt ${rtt} ms"
+    elif (( r >= wrtt )); then warn "gateway $GW rtt ${rtt} ms"; fi
+    perf_gw="gw_rtt=${rtt}ms;$wrtt;$crtt;0 "
+  fi
+  perf_gw+="gw_loss=${loss}%;$wloss;$closs;0;100 "
+elif [ -z "$GW" ]; then
+  notes+=("no gateway on $IF")
+fi
+
+label=(OK WARNING CRITICAL UNKNOWN)
+msg="${label[$rc]} - $IF $oper${speed:+ ${speed} Mbit/s}, ${addrs:-no address}${GW:+, gw $GW${rtt:+ ${rtt} ms}}"
+(( ${#notes[@]} )) && msg+=" ($(IFS=';'; echo "${notes[*]}"))"
+echo "$msg | ${perf_gw}rx=${rxb}c tx=${txb}c rx_errors=${rxe}c tx_errors=${txe}c rx_dropped=${rxd}c carrier_changes=${cc}c${speed:+ speed=${speed}}"
+exit $rc
